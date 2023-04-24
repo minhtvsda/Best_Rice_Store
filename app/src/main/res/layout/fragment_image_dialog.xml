@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    tools:context=".ImageDialogFragment">
+
+    <ImageView
+        android:id="@+id/imageViewDialog"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:src="@drawable/profile"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/text123"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+</LinearLayout>

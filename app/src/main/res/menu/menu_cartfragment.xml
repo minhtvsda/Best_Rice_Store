@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search_waiting"
+        android:title="Search all the waiting for deliverer cart"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_waiting_restaurant"
+        android:title="Search all the waiting for restaurant cart"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/action_search_cancel"
+        android:title="Search all cart that you cancel"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_cancel_restaurant"
+        android:title="Search all cart that restaurant cancel"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/action_search_delivering_customer"
+        android:title="Search all the delivering cart"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_done_customer"
+        android:title="Search all the order has done!"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+
+</menu>

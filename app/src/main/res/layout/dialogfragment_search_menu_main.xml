@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="650dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="start">
+    <TextView
+        android:text="Advance Search"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginBottom="30dp"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/search_drink"
+            android:layout_width="150dp"
+            android:layout_height="170dp"
+            android:src="@drawable/drink"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="80dp"
+            android:textSize="25dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="Drink"
+            />
+
+        <ImageView
+            android:id="@+id/search_noodle"
+            android:layout_width="150dp"
+            android:layout_height="170dp"
+            android:scaleType="center"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/noodles"
+            app:layout_constraintStart_toEndOf="@id/search_drink"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="136dp"
+            android:text="Noodle"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/red"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/search_drink"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/search_rice"
+            android:layout_width="150dp"
+            android:layout_height="170dp"
+            android:src="@drawable/rice"
+            app:layout_constraintTop_toBottomOf="@id/search_drink"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:scaleType="fitXY"
+            />
+        <ImageView
+            android:id="@+id/show_all"
+            android:layout_width="150dp"
+            android:layout_height="170dp"
+            android:src="@drawable/allfood"
+            app:layout_constraintTop_toBottomOf="@id/search_drink"
+            app:layout_constraintStart_toEndOf="@id/search_rice"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            />
+        <TextView
+            android:id="@+id/textview_show_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/search_rice"
+            app:layout_constraintStart_toEndOf="@id/search_rice"
+            android:layout_marginStart="70dp"
+
+            android:text="Show All"
+            android:textSize="25dp"
+            android:textColor="@color/red"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+        <TextView
+            android:id="@+id/textview_rice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/search_rice"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="70dp"
+
+            android:text="Rice"
+            android:textSize="25dp"
+            android:textColor="@color/red"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+        <TextView
+            android:id="@+id/search_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textview_rice"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:textSize="25dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="Search by Favorite"
+
+            android:visibility="gone"
+            android:textColor="@color/red"
+            />
+        <TextView
+            android:id="@+id/search_total_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/search_favorite"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:textSize="25dp"
+            android:textColor="@color/red"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="Search By total Sold"
+            android:visibility="gone"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="450dp"-->
+<!--        android:layout_height="500dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large">-->
+
+<!--         <LinearLayout-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="start">-->
+<!--            <TextView-->
+<!--                android:text="Type"-->
+<!--                android:textSize="30dp"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>-->
+
+<!--             <TextView-->
+<!--                 android:id="@+id/search_drink"-->
+<!--                 android:layout_width="150dp"-->
+<!--                 android:layout_height="40dp"-->
+<!--                 android:layout_marginTop="10dp"-->
+<!--                 android:background="@drawable/my_border"-->
+<!--                 android:text="  Drink  "-->
+<!--                 android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                 android:textSize="20dp" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/search_noddle"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:text=" Noodle  "-->
+<!--                android:textSize="20dp"-->
+<!--                android:background="@drawable/my_border"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/search_rice"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:text="  Rice  "-->
+<!--                android:textSize="20dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:background="@drawable/my_border"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:gravity="end">-->
+<!--            <TextView-->
+<!--                android:text="Cost"-->
+<!--                android:textSize="30dp"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/search_0_20"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:text=" 0 - 20000VND  "-->
+<!--                android:textSize="20dp"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                android:background="@drawable/my_border"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginEnd="30dp"-->
+
+
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/search_25_50"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:text=" 20 -50000VND"-->
+<!--                android:textSize="20dp"-->
+<!--                android:background="@drawable/my_border"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginEnd="30dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/search_50_more"-->
+<!--                android:layout_marginEnd="30dp"-->
+
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:text=" >50000 VND "-->
+<!--                android:textSize="20dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:background="@drawable/my_border"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
+</LinearLayout>

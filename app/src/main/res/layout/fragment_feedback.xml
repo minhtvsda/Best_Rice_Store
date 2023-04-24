@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".feedback.FeedbackFragment">
+
+    <Button
+        android:id="@+id/add_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Share your feedback for us to develop the restaurant!"
+        />
+    <Button
+        android:id="@+id/check_respond"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check our responds for your feedbacks!"
+        />
+
+    <Button
+        android:id="@+id/btn_check_user_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check my feedbacks!"
+        />
+</LinearLayout>

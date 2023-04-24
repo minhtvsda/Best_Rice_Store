@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search_order"
+        android:title="Search"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView"/>
+    <item
+        android:id="@+id/action_calculator"
+        android:title="action_calculator"
+        android:icon="@drawable/ic_baseline_calculate_24"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_calendar"
+        android:title="action_calendar"
+        android:icon="@drawable/ic_outline_calendar_month_24"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_search_waiting_restaurant"
+        android:title="Search all the waiting restaurant cart"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/action_search_waiting_deliverer"
+        android:title="Search all the waiting deliverer cart"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_user_cancel"
+        android:title="Search all the food user cancel"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_restaurant_cancel"
+        android:title="Search all the bill restaurant cancel"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/action_search_delivering"
+        android:title="Search all order delivering"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_done"
+        android:title="Search all done-order"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+</menu>

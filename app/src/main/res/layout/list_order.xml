@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="70dp"
+        android:layout_height="130dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_background"
+        />
+    
+
+    <TextView
+        android:id="@+id/cartName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="sometextwillshowheasdsadsare" />
+
+    <TextView
+        android:id="@+id/cart_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/cartName"
+        android:layout_marginTop="5dp"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="sometextwillshowheasdsadsare" />
+
+    <TextView
+        android:id="@+id/cartCost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#000000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/cart_username"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        tools:text="sometextwillshowheasdsadsare"/>
+    <TextView
+        android:id="@+id/cartQuantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#000000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/cartCost"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        tools:text="sometextwillshowheasdsadsare"/>
+    <TextView
+        android:id="@+id/cart_useraddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="#000000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/cartQuantity"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        tools:text="sometextwillshowheasdsadsare"/>
+    <TextView
+        android:id="@+id/cart_userphone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#000000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/cart_useraddress"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        tools:text="sometextwillshowheasdsadsare"/>
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#000000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/cart_userphone"
+        app:layout_constraintEnd_toStartOf="@id/cartStatus"
+        tools:text="sometextwillshowheasdsadsare"/>
+
+    <TextView
+        android:id="@+id/cartStatus"
+        android:layout_width="71dp"
+        android:layout_height="95dp"
+        android:background="@color/yellow"
+        android:maxLines="5"
+        android:textSize="15dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cartName"
+        app:layout_constraintTop_toTopOf="@id/cartName"
+        tools:text="Waiting for deliverer's acceptance" />
+
+    <Button
+        android:id="@+id/btn_accept"
+        android:layout_width="71dp"
+        android:layout_height="71dp"
+        android:maxLines="4"
+        android:text="Accept bill"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/cartStatus"
+        app:layout_constraintTop_toBottomOf="@+id/cartStatus"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_delivery_done"
+        android:layout_width="71dp"
+        android:layout_height="71dp"
+        android:maxLines="4"
+        android:text="Delivery done!"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/cartStatus"
+        app:layout_constraintTop_toBottomOf="@+id/cartStatus"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

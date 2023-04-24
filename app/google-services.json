@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "36307549260",
+    "firebase_url": "https://appricestore-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "appricestore",
+    "storage_bucket": "appricestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36307549260:android:98d69e9ba49629adf248e9",
+        "android_client_info": {
+          "package_name": "com.example.bestricestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "36307549260-siuf0n7feerv0akj6m4857a6nc2e2ph8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bestricestore",
+            "certificate_hash": "b1fb5cb036d918828c71541ffcdb4b7e33a2080d"
+          }
+        },
+        {
+          "client_id": "36307549260-adujss2oot08qh7jf6v8ntma2urm4h93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM-bq6xcaWR8M1SCY6T_FVHZ8AmUVJ3vE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "36307549260-adujss2oot08qh7jf6v8ntma2urm4h93.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

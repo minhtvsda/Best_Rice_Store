@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".newfeed.EditorNewFragment">
+    <Button android:id="@+id/save_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"/>
+    <Button
+        android:id="@+id/delete_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete!"/>
+
+    <ImageView  android:id="@+id/image_new"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/profile"
+        android:padding="20dp" />
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date!"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <EditText   android:id="@+id/edt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:layout_marginTop="30dp"
+        />
+    <EditText
+        android:id="@+id/edt_newInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="NewInfo"
+        android:layout_marginTop="30dp"
+        />
+
+
+</LinearLayout>

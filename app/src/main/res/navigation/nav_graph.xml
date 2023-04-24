@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.bestricestore.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/editorFragment"
+        android:name="com.example.bestricestore.EditorFragment"
+        android:label="fragment_editor"
+        tools:layout="@layout/fragment_editor" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.bestricestore.cart.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.bestricestore.login.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" />
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.bestricestore.login.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.bestricestore.login.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.bestricestore.login.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.bestricestore.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.bestricestore.login.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/checkOrderFragment"
+        android:name="com.example.bestricestore.cart.CheckOrderFragment"
+        android:label="fragment_check_order"
+        tools:layout="@layout/fragment_check_order" />
+    <fragment
+        android:id="@+id/newFragment"
+        android:name="com.example.bestricestore.newfeed.NewFragment"
+        android:label="fragment_new"
+        tools:layout="@layout/fragment_new" />
+    <fragment
+        android:id="@+id/editorNewFragment"
+        android:name="com.example.bestricestore.newfeed.EditorNewFragment"
+        android:label="fragment_editor_new"
+        tools:layout="@layout/fragment_editor_new" />
+    <fragment
+        android:id="@+id/orderAdminFragment"
+        android:name="com.example.bestricestore.cart.OrderAdminFragment"
+        android:label="fragment_order_admin"
+        tools:layout="@layout/fragment_order_admin" />
+    <fragment
+        android:id="@+id/phoneSignUpFragment"
+        android:name="com.example.bestricestore.login.PhoneSignUpFragment"
+        android:label="fragment_phone_sign_up"
+        tools:layout="@layout/fragment_phone_sign_up" />
+    <fragment
+        android:id="@+id/phoneVerifyFragment"
+        android:name="com.example.bestricestore.login.PhoneVerifyFragment"
+        android:label="fragment_phone_verify"
+        tools:layout="@layout/fragment_phone_verify" />
+    <fragment
+        android:id="@+id/deliSignUpFragment"
+        android:name="com.example.bestricestore.login.DeliSignUpFragment"
+        android:label="fragment_deli_sign_up"
+        tools:layout="@layout/fragment_deli_sign_up" />
+    <fragment
+        android:id="@+id/manageUsersFragment"
+        android:name="com.example.bestricestore.ManageUsersFragment"
+        android:label="fragment_manage_users"
+        tools:layout="@layout/fragment_manage_users" />
+    <fragment
+        android:id="@+id/viewUsersFragment"
+        android:name="com.example.bestricestore.ManageUser.ViewUsersFragment"
+        android:label="fragment_view_users"
+        tools:layout="@layout/fragment_view_users" />
+    <fragment
+        android:id="@+id/checkRegisterFragment"
+        android:name="com.example.bestricestore.ManageUser.CheckRegisterFragment"
+        android:label="fragment_check_register"
+        tools:layout="@layout/fragment_check_register" />
+    <fragment
+        android:id="@+id/editorUsersFragment"
+        android:name="com.example.bestricestore.ManageUser.EditorUsersFragment"
+        android:label="fragment_editor_users"
+        tools:layout="@layout/fragment_editor_users" />
+    <fragment
+        android:id="@+id/editorCheckFragment"
+        android:name="com.example.bestricestore.ManageUser.EditorCheckFragment"
+        android:label="fragment_editor_check"
+        tools:layout="@layout/fragment_editor_check" />
+    <fragment
+        android:id="@+id/selectRoleFragment"
+        android:name="com.example.bestricestore.login.SelectRoleFragment"
+        android:label="fragment_select_role"
+        tools:layout="@layout/fragment_select_role" />
+    <fragment
+        android:id="@+id/customerSignUpFragment"
+        android:name="com.example.bestricestore.login.CustomerSignUpFragment"
+        android:label="fragment_customer_sign_up"
+        tools:layout="@layout/fragment_customer_sign_up" />
+    <fragment
+        android:id="@+id/foodDetailFragment"
+        android:name="com.example.bestricestore.FoodDetailFragment"
+        android:label="fragment_food_detail"
+        tools:layout="@layout/fragment_food_detail" />
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="com.example.bestricestore.feedback.FeedbackFragment"
+        android:label="fragment_feedback"
+        tools:layout="@layout/fragment_feedback" />
+    <fragment
+        android:id="@+id/addFeedbackFragment"
+        android:name="com.example.bestricestore.feedback.AddFeedbackFragment"
+        android:label="fragment_add_feedback"
+        tools:layout="@layout/fragment_add_feedback" />
+    <fragment
+        android:id="@+id/checkRespondFragment"
+        android:name="com.example.bestricestore.feedback.CheckRespondFragment"
+        android:label="fragment_check_respond"
+        tools:layout="@layout/fragment_check_respond" />
+    <fragment
+        android:id="@+id/checkFeedbackFragment"
+        android:name="com.example.bestricestore.feedback.CheckFeedbackFragment"
+        android:label="fragment_check_feedback"
+        tools:layout="@layout/fragment_check_feedback" />
+    <fragment
+        android:id="@+id/editorFeedbackFragment"
+        android:name="com.example.bestricestore.feedback.EditorFeedbackFragment"
+        android:label="fragment_editor_feedback"
+        tools:layout="@layout/fragment_editor_feedback" />
+    <fragment
+        android:id="@+id/editorRespondFragment"
+        android:name="com.example.bestricestore.feedback.EditorRespondFragment"
+        android:label="fragment_editor_respond"
+        tools:layout="@layout/fragment_editor_respond" />
+    <fragment
+        android:id="@+id/userEditorRespondFragment"
+        android:name="com.example.bestricestore.feedback.UserEditorRespondFragment"
+        android:label="fragment_user_editor_respond"
+        tools:layout="@layout/fragment_user_editor_respond" />
+    <fragment
+        android:id="@+id/userEditorFeedbackFragment"
+        android:name="com.example.bestricestore.feedback.UserEditorFeedbackFragment"
+        android:label="fragment_user_editor_feedback"
+        tools:layout="@layout/fragment_user_editor_feedback" />
+    <fragment
+        android:id="@+id/userEditorNewFragment"
+        android:name="com.example.bestricestore.newfeed.UserEditorNewFragment"
+        android:label="fragment_user_editor_new"
+        tools:layout="@layout/fragment_user_editor_new" />
+    <!--    <fragment-->
+<!--        android:id="@+id/imageDialogFragment"-->
+<!--        android:name="com.example.bestricestore.ImageDialogFragment"-->
+<!--        android:label="fragment_image_dialog"-->
+<!--        tools:layout="@layout/fragment_image_dialog" />-->
+
+</navigation>

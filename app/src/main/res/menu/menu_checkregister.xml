@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_show_all_deliverer_register"
+        android:title="Show both registering and declined"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_deliverer_register"
+        android:title="Search all register deliverers"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_deliverer_register_declined"
+        android:title="Search all declined register deliverers"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_users"
+        android:title="Search by Phone, Name or Address of users"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView"/>
+</menu>

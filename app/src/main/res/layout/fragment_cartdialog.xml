@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:background="@color/green">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="One more step!!!"
+        android:textSize="30dp"
+        android:background="@color/yellow"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:text="Type your place you will receive your food"/>
+
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use your current address!"
+        android:textSize="20dp"
+
+        android:id="@+id/set_address"/>
+
+    <EditText
+
+        android:id="@+id/editTextAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type your address"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        />
+    <EditText
+
+        android:id="@+id/editTextNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Note if needed!"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        />
+    <Button
+        android:id="@+id/dialog_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Order now!"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@drawable/ic_outline_search_24"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+
+    <item
+        android:id="@+id/action_search_type_rice"
+        android:title="Search all restaurant's rice"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_type_drink"
+        android:title="Search all restaurant's drink"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_type_noodle"
+        android:title="Search all restaurant's drink"
+        app:showAsAction="withText"/>
+    <item
+        android:id="@+id/action_search_by_cost"
+        android:title="Search all food by cost"
+        app:showAsAction="withText"/>
+
+</menu>

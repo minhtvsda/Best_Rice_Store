@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ManageUser.EditorCheckFragment">
+
+    <TextView
+        android:id="@+id/user_phone_number"
+        android:layout_width="match_parent"
+        android:text="00000"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="5dp"/>
+    <TextView
+        android:text="name"
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="5dp"/>
+    <TextView
+        android:text="email"
+        android:id="@+id/user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/user_roles"
+        android:text="role"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:text="The deliverer ID card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="15dp"/>
+    <ImageView
+        android:id="@+id/image_id"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        />
+    <TextView
+        android:text="The deliverer driving license"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="15dp"/>
+    <ImageView
+        android:id="@+id/image_driving_license"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        />
+    <TextView
+        android:text="The deliverer motor license"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="15dp"/>
+    <ImageView
+        android:id="@+id/image_motor_license"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        />
+    <Button
+        android:id="@+id/btn_accept"
+        android:text="Accept to deliverer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn_decline"
+        android:text="Decline the deliverer!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
