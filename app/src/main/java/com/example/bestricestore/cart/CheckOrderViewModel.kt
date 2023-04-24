@@ -21,7 +21,6 @@ class CheckOrderViewModel : ViewModel() {
         order
     }
 
-    //                                userdeliPhone = document.getString("phoneNumber");
     val profile: Unit
         get() {
             if (user == null) {
