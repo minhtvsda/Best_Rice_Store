@@ -16,7 +16,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
-class EditorUsersViewModel constructor() : ViewModel() {
+class EditorUsersViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var muser: MutableLiveData<User> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -26,18 +26,18 @@ class EditorUsersViewModel constructor() : ViewModel() {
         ) // lay document theo id
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
             //lay du lieu
-            public override fun onComplete(task: Task<DocumentSnapshot>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot = task.result
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        val u: User = User.Companion.getUserIdFromFireStore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        val u: User = User.getUserIdFromFireStore(document)
                         muser.setValue(u)
                     } else {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
         })

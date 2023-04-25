@@ -16,7 +16,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ProfileViewModel constructor() : ViewModel() {
+class ProfileViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var muser: MutableLiveData<User> = MutableLiveData()
     fun getUserProfile(id: String?) {
@@ -26,12 +26,12 @@ class ProfileViewModel constructor() : ViewModel() {
             )
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
             //lay du lieu
-            public override fun onComplete(task: Task<DocumentSnapshot>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot = task.result
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        val u: User = User.Companion.getUserFromFireStore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        val u: User = User.getUserFromFireStore(document)
                         muser.setValue(u)
                         //get role
 //                        roleUser = document.getString("roles");
@@ -39,7 +39,7 @@ class ProfileViewModel constructor() : ViewModel() {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
         })
@@ -55,13 +55,13 @@ class ProfileViewModel constructor() : ViewModel() {
         id: String?
     ) {
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
-        val u: User = User(name, email, address, role, user!!.getPhoneNumber(), dob, gender, muser.value?.tokenId)
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val u: User = User(name, email, address, role, user!!.phoneNumber, dob, gender, muser.value?.tokenId)
         db.collection(Constants.FS_USER).document((id)!!).set(u)
             .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                public override fun onSuccess(aVoid: Void?) {
+                override fun onSuccess(aVoid: Void?) {
                     Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
-                    muser.setValue(u)
+                    muser.value = u
                 }
             })
     }

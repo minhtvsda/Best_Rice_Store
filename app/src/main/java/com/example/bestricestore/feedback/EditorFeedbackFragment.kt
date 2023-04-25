@@ -30,34 +30,34 @@ import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditorFeedbackFragment constructor() : Fragment() {
+class EditorFeedbackFragment : Fragment() {
     private lateinit var mViewModel: EditorFeedbackViewModel
     private lateinit var binding: FragmentEditorFeedbackBinding
     var respondUri: Uri? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(EditorFeedbackViewModel::class.java)
         binding = FragmentEditorFeedbackBinding.inflate(inflater, container, false)
-        mViewModel!!.feedback.observe(
-            getViewLifecycleOwner(),
-            Observer { feedback: Feedback ->
-                binding!!.date.setText("Date: " + feedback.date)
+        mViewModel.feedback.observe(
+            viewLifecycleOwner,
+            { feedback: Feedback ->
+                binding.date.text = "Date: " + feedback.date
                 //                    binding.userName.setText("UserName: " + feedback.getUserName());
-                binding!!.title.setText("Title: " + feedback.title)
-                binding!!.purpose.setText("Purpose: " + feedback.purpose)
-                binding!!.userPhone.setText("UserPhone: " + feedback.userPhone)
-                binding!!.userName.setText("UserName: " + feedback.userName)
+                binding.title.text = "Title: " + feedback.title
+                binding.purpose.text = "Purpose: " + feedback.purpose
+                binding.userPhone.text = "UserPhone: " + feedback.userPhone
+                binding.userName.text = "UserName: " + feedback.userName
                 Glide.with(requireContext()).load(feedback.imageUrl)
                     .error(R.drawable.profile)
-                    .fitCenter().into(binding!!.imageFeedback)
+                    .fitCenter().into(binding.imageFeedback)
                 if ((feedback.feedbackStatus == Constants.FEEDBACK_ALREADY_RESPONDED)) {
-                    binding!!.respondTitle.setText("You have already responded this feedback. Please navigate to the respond screen!")
-                    binding!!.respondMainAnswer.setVisibility(View.GONE)
-                    binding!!.btnSave.setVisibility(View.GONE)
-                    binding!!.btnNavigateRespond.setVisibility(View.VISIBLE)
-                    binding!!.btnNavigateRespond.setOnClickListener(View.OnClickListener { v: View? ->
+                    binding.respondTitle.setText("You have already responded this feedback. Please navigate to the respond screen!")
+                    binding.respondMainAnswer.visibility = View.GONE
+                    binding.btnSave.visibility = View.GONE
+                    binding.btnNavigateRespond.visibility = View.VISIBLE
+                    binding.btnNavigateRespond.setOnClickListener({ v: View? ->
                         val b = Bundle()
                         b.putString("role", Constants.ROLE_ADMIN)
                         findNavController(requireView()).navigate(R.id.checkRespondFragment, b)
@@ -66,32 +66,32 @@ class EditorFeedbackFragment constructor() : Fragment() {
             }
         )
         val feedbackId: String? = requireArguments().getString("feedbackId")
-        mViewModel!!.getFeedbackById(feedbackId)
-        binding!!.imageRespond.setOnClickListener(View.OnClickListener { v: View? -> selectImage() })
-        binding!!.btnSave.setOnClickListener(View.OnClickListener { v: View? -> saveRespond() })
-        binding!!.btnDelete.setOnClickListener(View.OnClickListener { v: View? ->
-            mViewModel!!.deleteFeedback(feedbackId)
+        mViewModel.getFeedbackById(feedbackId)
+        binding.imageRespond.setOnClickListener({ v: View? -> selectImage() })
+        binding.btnSave.setOnClickListener({ v: View? -> saveRespond() })
+        binding.btnDelete.setOnClickListener({ v: View? ->
+            mViewModel.deleteFeedback(feedbackId)
             findNavController(requireView()).navigateUp()
         })
-        binding!!.imageRespond.setOnClickListener(View.OnClickListener { v: View? -> showImage() })
-        return binding!!.root
+        binding.imageRespond.setOnClickListener({ v: View? -> showImage() })
+        return binding.root
     }
 
     private fun showImage() {
         val fragment: ImageDialogFragment = ImageDialogFragment()
         val result = Bundle()
-        result.putString("bundleKeyImageUrl", mViewModel!!.feedback.getValue()!!.imageUrl)
+        result.putString("bundleKeyImageUrl", mViewModel.feedback.value!!.imageUrl)
         // The child fragment needs to still set the result on its parent fragment manager
                 setFragmentResult("requestKey", result)
         fragment.show(childFragmentManager, "TAG")
     }
 
     private fun saveRespond() {
-        val f: Feedback = mViewModel!!.feedback.value!!
-        val respondTitle: String = binding!!.respondTitle.getText().toString()
-        val respondAnswer: String = binding!!.respondMainAnswer.getText().toString()
+        val f: Feedback = mViewModel.feedback.value!!
+        val respondTitle: String = binding.respondTitle.text.toString()
+        val respondAnswer: String = binding.respondMainAnswer.text.toString()
         if (((Constants.EMPTY_STRING == respondAnswer) || (Constants.EMPTY_STRING == respondTitle))) {
-            Toast.makeText(getContext(), "You need to type required fields!", Toast.LENGTH_SHORT)
+            Toast.makeText(context, "You need to type required fields!", Toast.LENGTH_SHORT)
                 .show()
             return
         }
@@ -105,20 +105,20 @@ class EditorFeedbackFragment constructor() : Fragment() {
                 FirebaseStorage.getInstance().getReference("respond/" + fileName)
             storageReference.putFile(respondUri!!)
                 .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                    public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                    override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                         // lay url theo cach moi
-                        val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                            .getReference()!!.getDownloadUrl()
+                        val task: Task<Uri> = taskSnapshot.metadata!!
+                            .reference!!.downloadUrl
                         task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                            public override fun onSuccess(uri: Uri) {
-                                mViewModel!!.changFeedbackStatus(f.id)
+                            override fun onSuccess(uri: Uri) {
+                                mViewModel.changFeedbackStatus(f.id)
                                 val respond: Respond = Respond(
                                     f.imageUrl, f.userId, f.userPhone,
                                     f.userName, f.date, f.title,
                                     f.purpose, respondTitle, respondAnswer, uri.toString()
                                 )
-                                mViewModel!!.sendRespond(respond)
-                                Toast.makeText(getContext(), "Successful!!", Toast.LENGTH_SHORT)
+                                mViewModel.sendRespond(respond)
+                                Toast.makeText(context, "Successful!!", Toast.LENGTH_SHORT)
                                     .show()
                                 progressDialog.dismiss()
                                 findNavController(view!!).navigateUp()
@@ -127,24 +127,24 @@ class EditorFeedbackFragment constructor() : Fragment() {
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         progressDialog.dismiss()
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "Failed to upload Image!Try again.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 })
         } else {
-            mViewModel!!.changFeedbackStatus(f.id)
+            mViewModel.changFeedbackStatus(f.id)
             val respond: Respond = Respond(
                 f.imageUrl, f.userId, f.userPhone,
                 f.userName, f.date, f.title,
                 f.purpose, respondTitle, respondAnswer, ""
             )
-            mViewModel!!.sendRespond(respond)
-            Toast.makeText(getContext(), "Successful!!", Toast.LENGTH_SHORT).show()
+            mViewModel.sendRespond(respond)
+            Toast.makeText(context, "Successful!!", Toast.LENGTH_SHORT).show()
             progressDialog.dismiss()
             findNavController(requireView()).navigateUp()
         }
@@ -152,16 +152,16 @@ class EditorFeedbackFragment constructor() : Fragment() {
 
     private fun selectImage() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 120)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == 120) && (data != null) && (data.getData() != null)) {
-            respondUri = data.getData()
-            binding!!.imageRespond.setImageURI(respondUri)
+        if ((requestCode == 120) && (data != null) && (data.data != null)) {
+            respondUri = data.data
+            binding.imageRespond.setImageURI(respondUri)
         }
     }
 

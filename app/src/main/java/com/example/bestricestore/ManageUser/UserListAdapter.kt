@@ -26,10 +26,10 @@ class UserListAdapter constructor(
         }
 
         fun bindData(uData: User) {
-            userViewBinding.userName.setText("Name: " + uData.username)
-            userViewBinding.userPhone.setText("Phone:" + uData.phoneNumber)
-            userViewBinding.userAddress.setText("Address: " + uData.address)
-            userViewBinding.userRole.setText("Role: " + uData.roles)
+            userViewBinding.userName.text = "Name: " + uData.username
+            userViewBinding.userPhone.text = "Phone:" + uData.phoneNumber
+            userViewBinding.userAddress.text = "Address: " + uData.address
+            userViewBinding.userRole.text = "Role: " + uData.roles
             if (((uData.roles == Constants.FS_ROLE_BAN) || (uData.roles == Constants.DELIVERER_REGISTER_WAITING))) {
                 userViewBinding.buttonBan.visibility = View.GONE
             }
@@ -54,21 +54,21 @@ class UserListAdapter constructor(
         notifyDataSetChanged()
     }
 
-    public override fun onCreateViewHolder(
+    override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): UserViewHolder {
-        val view: View = LayoutInflater.from(parent.getContext())
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_user, parent, false) //create view for each of food null;
         return UserViewHolder(view)
     }
 
-    public override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val uData: User = userList.get(position)
         holder.bindData(uData)
     }
 
-    public override fun getItemCount(): Int {
+    override fun getItemCount(): Int {
         return userList.size
     }
 }

@@ -14,41 +14,41 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class ChangePasswordFragment constructor() : Fragment() {
+class ChangePasswordFragment : Fragment() {
     private lateinit var mViewModel: ChangePasswordViewModel
     private lateinit var binding: FragmentChangePasswordBinding
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(ChangePasswordViewModel::class.java)
         binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
-        binding!!.btnSavePassword.setOnClickListener { v: View? -> updatePassword() }
-        return binding!!.getRoot()
+        binding.btnSavePassword.setOnClickListener { v: View? -> updatePassword() }
+        return binding.root
     }
 
     private fun updatePassword() {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
-        val newPassword: String = binding!!.password.getText().toString()
-        val confirmPassword: String = binding!!.confirmPassword.text.toString()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val newPassword: String = binding.password.text.toString()
+        val confirmPassword: String = binding.confirmPassword.text.toString()
         if (!(newPassword == confirmPassword)) {
-            Toast.makeText(getContext(), "Please type the same!", Toast.LENGTH_LONG).show()
-            binding!!.confirmPassword.setError("Must be the same password!")
+            Toast.makeText(context, "Please type the same!", Toast.LENGTH_LONG).show()
+            binding.confirmPassword.error = "Must be the same password!"
             return
         }
         user!!.updatePassword(newPassword)
             .addOnCompleteListener(object : OnCompleteListener<Void?> {
-                public override fun onComplete(task: Task<Void?>) {
-                    if (task.isSuccessful()) {
+                override fun onComplete(task: Task<Void?>) {
+                    if (task.isSuccessful) {
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "Update password successful!",
                             Toast.LENGTH_LONG
                         ).show()
                         findNavController(requireView()).navigateUp()
                     } else {
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "Update password failed! You need to re-login your account",
                             Toast.LENGTH_LONG
                         ).show()

@@ -12,11 +12,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 
-class NewViewModel constructor() : ViewModel() {
+class NewViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var newList: MutableLiveData<List<NewEntity>> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     init {
         news
@@ -31,15 +31,15 @@ class NewViewModel constructor() : ViewModel() {
                 .limit(10)
                 .get() //lay tat ca ve
                 .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    public override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                            for (document: QueryDocumentSnapshot in task.getResult()) {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                            for (document: QueryDocumentSnapshot in task.result) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    document.getId() + " => " + document.getData()
+                                    document.id + " => " + document.data
                                 )
                                 val n: NewEntity =
-                                    NewEntity.Companion.getNewFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                    NewEntity.getNewFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                                 List.add(n)
                             }
                             newList.setValue(List)
@@ -47,7 +47,7 @@ class NewViewModel constructor() : ViewModel() {
                             Log.w(
                                 Constants.FIRE_STORE,
                                 "Error getting documents.",
-                                task.getException()
+                                task.exception
                             )
                         }
                     }

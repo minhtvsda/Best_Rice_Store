@@ -32,16 +32,16 @@ import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditorFragment constructor() : Fragment() {
+class EditorFragment : Fragment() {
     private lateinit var mViewModel: EditorViewModel
     private lateinit var binding: FragmentEditorBinding
     private lateinit var dialogbinding: FragmentCartdialogBinding
     private val muser: User? = null
     private var foodUri: Uri? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val app: AppCompatActivity? = activity as AppCompatActivity?
         //get activity, app chinh la ca activity chua fragment  nay
         val ab: ActionBar? = app!!.supportActionBar //lay phan giai mau tim
@@ -53,54 +53,54 @@ class EditorFragment constructor() : Fragment() {
         mViewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
         binding = FragmentEditorBinding.inflate(inflater, container, false)
         dialogbinding = FragmentCartdialogBinding.inflate(inflater, container, false)
-        mViewModel!!.food.observe(
+        mViewModel.food.observe(
             viewLifecycleOwner,
-            Observer { foodEntity: FoodEntity ->
-                binding!!.type.setText(foodEntity.type)
-                binding!!.name.setText(foodEntity.name)
-                binding!!.cost.setText(foodEntity.cost.toString())
-                binding!!.description.setText(foodEntity.description)
-                binding!!.salePercent.setText(Integer.toString(foodEntity.salePercent))
-                binding!!.currentStatus.setText(foodEntity.currentStatus)
+            { foodEntity: FoodEntity ->
+                binding.type.setText(foodEntity.type)
+                binding.name.setText(foodEntity.name)
+                binding.cost.setText(foodEntity.cost.toString())
+                binding.description.setText(foodEntity.description)
+                binding.salePercent.setText(Integer.toString(foodEntity.salePercent))
+                binding.currentStatus.text = foodEntity.currentStatus
                 if (!(foodEntity.imageUrl == "")) {
                     Glide.with(requireContext()).load(foodEntity.imageUrl)
-                        .error(R.drawable.profile).into(binding!!.imageFood)
+                        .error(R.drawable.profile).into(binding.imageFood)
                 }
                 if (!(foodEntity.type == Constants.EMPTY_STRING)) {
-                    binding!!.spinnerType.visibility = View.GONE
+                    binding.spinnerType.visibility = View.GONE
                 }
                 requireActivity().invalidateOptionsMenu()
             }
         )
         val foodId = requireArguments().getString("foodId")
-        mViewModel!!.getFoodById(foodId!!)
-        binding!!.imageFood.setOnClickListener { v: View? -> selectImage() }
+        mViewModel.getFoodById(foodId!!)
+        binding.imageFood.setOnClickListener { v: View? -> selectImage() }
         val type: List<String?> = listOf("Select type", "Drink", "Rice", "Noodle", "Other")
         val aa2: ArrayAdapter<String?> =
             ArrayAdapter<String?>((requireContext()), android.R.layout.simple_spinner_item, type)
-        binding!!.type.setOnClickListener { v: View? ->
-            binding!!.spinnerType.visibility = View.VISIBLE
+        binding.type.setOnClickListener { v: View? ->
+            binding.spinnerType.visibility = View.VISIBLE
         }
         aa2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-        binding!!.spinnerType.adapter = aa2
-        binding!!.spinnerType.onItemSelectedListener = object :
+        binding.spinnerType.adapter = aa2
+        binding.spinnerType.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            public override fun onItemSelected(
+            override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
                 if (position != 0) {
-                    binding!!.type.setText(type.get(position))
-                    binding!!.spinnerType.setVisibility(View.GONE)
+                    binding.type.setText(type.get(position))
+                    binding.spinnerType.visibility = View.GONE
                     if (position == 4) {
-                        binding!!.type.setText("")
+                        binding.type.setText("")
                     }
                 }
             }
 
-            public override fun onNothingSelected(parent: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
         }
@@ -112,41 +112,41 @@ class EditorFragment constructor() : Fragment() {
         val aa: ArrayAdapter<*> =
             ArrayAdapter<Any?>(requireContext(), android.R.layout.simple_spinner_item, status)
         aa.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-        binding!!.spinnerCurrentStatus.setAdapter(aa)
-        binding!!.currentStatus.setOnClickListener { v: View? ->
-            binding!!.spinnerCurrentStatus.visibility = View.VISIBLE
+        binding.spinnerCurrentStatus.adapter = aa
+        binding.currentStatus.setOnClickListener { v: View? ->
+            binding.spinnerCurrentStatus.visibility = View.VISIBLE
         }
-        binding!!.spinnerCurrentStatus.onItemSelectedListener = object :
+        binding.spinnerCurrentStatus.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            public override fun onItemSelected(
+            override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
                 if (position != 0) {
-                    binding!!.currentStatus.setText(status.get(position))
-                    binding!!.spinnerCurrentStatus.setVisibility(View.GONE)
+                    binding.currentStatus.text = status.get(position)
+                    binding.spinnerCurrentStatus.visibility = View.GONE
                 }
             }
 
-            public override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun selectImage() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 100)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == 100) && (data != null) && (data.getData() != null)) {
-            foodUri = data.getData()
-            binding!!.imageFood.setImageURI(foodUri)
+        if ((requestCode == 100) && (data != null) && (data.data != null)) {
+            foodUri = data.data
+            binding.imageFood.setImageURI(foodUri)
         }
     }
 
@@ -154,15 +154,15 @@ class EditorFragment constructor() : Fragment() {
         val progressDialog: ProgressDialog = ProgressDialog(context)
         progressDialog.setTitle("Saving")
         progressDialog.show()
-        val id: String = mViewModel!!.food.value!!.id!!
+        val id: String = mViewModel.food.value!!.id!!
         //lay tu food do id ko doi
-        val type: String = binding!!.type.getText().toString()
-        val name: String = binding!!.name.getText().toString()
-        val cost: Int = binding!!.cost.getText().toString().toInt()
-        val description: String = binding!!.description.getText().toString()
-        val imageUrl: String = mViewModel!!.food.getValue()!!.imageUrl!!
-        val salePercent: Int = binding!!.salePercent.getText().toString().toInt()
-        val currentStatus: String = binding!!.currentStatus.getText().toString()
+        val type: String = binding.type.text.toString()
+        val name: String = binding.name.text.toString()
+        val cost: Int = binding.cost.text.toString().toInt()
+        val description: String = binding.description.text.toString()
+        val imageUrl: String = mViewModel.food.value!!.imageUrl!!
+        val salePercent: Int = binding.salePercent.text.toString().toInt()
+        val currentStatus: String = binding.currentStatus.text.toString()
         if (foodUri != null) {
             val formatter: SimpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
             val now: Date = Date()
@@ -171,10 +171,10 @@ class EditorFragment constructor() : Fragment() {
                 FirebaseStorage.getInstance().getReference("image/" + fileName)
             storageReference.putFile(foodUri!!)
                 .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                    public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                    override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                         // lay url theo cach moi
-                        val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                            .getReference()!!.getDownloadUrl()
+                        val task: Task<Uri> = taskSnapshot.metadata!!
+                            .reference!!.downloadUrl
                         task.addOnSuccessListener { uri ->
                             val photoLink: String = uri.toString()
                             val updateFood: FoodEntity = FoodEntity(
@@ -188,10 +188,10 @@ class EditorFragment constructor() : Fragment() {
                                 salePercent,
                                 currentStatus
                             )
-                            mViewModel!!.updateFood(updateFood)
+                            mViewModel.updateFood(updateFood)
                             progressDialog.dismiss()
                             Toast.makeText(
-                                getContext(),
+                                context,
                                 "Update food successful!",
                                 Toast.LENGTH_LONG
                             ).show()
@@ -205,22 +205,22 @@ class EditorFragment constructor() : Fragment() {
                 id //                != null ? id : Constants.NEW_FOOD_ID//neu id la null thi ta se lay const
                 , type, name, cost, description, imageUrl, salePercent, currentStatus
             ) // sau nay co the dung add food
-            mViewModel!!.updateFood(updateFood)
+            mViewModel.updateFood(updateFood)
             progressDialog.dismiss()
-            Toast.makeText(getContext(), "Update food successful!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Update food successful!", Toast.LENGTH_LONG).show()
             findNavController(requireView()).navigate(R.id.mainFragment) // 1 trong 3 cach de nhay giua cac fragment
             return true
         }
     }
 
-    public override fun onPrepareOptionsMenu(menu: Menu) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val f: FoodEntity? = mViewModel!!.food.value
+        val f: FoodEntity? = mViewModel.food.value
             menu.findItem(R.id.action_delete).isVisible = !(f != null && (f.id == Constants.NEW_ID))
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             android.R.id.home -> if (isFoodValidated) savethenReturn() else false
             R.id.action_delete -> deletethenReturn()
             else -> super.onOptionsItemSelected(item)
@@ -228,49 +228,49 @@ class EditorFragment constructor() : Fragment() {
     }
 
     private fun deletethenReturn(): Boolean {
-        Log.i(this.javaClass.getName(), "delete and return")
-        mViewModel!!.deleteFood()
-        Toast.makeText(getContext(), "Delete food successfully!!", Toast.LENGTH_SHORT).show()
+        Log.i(this.javaClass.name, "delete and return")
+        mViewModel.deleteFood()
+        Toast.makeText(context, "Delete food successfully!!", Toast.LENGTH_SHORT).show()
         findNavController(requireView()).navigate(R.id.mainFragment)
         return true
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_delete, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     private val isFoodValidated: Boolean
         private get() {
-            val name: EditText = binding!!.name
-            val type: EditText = binding!!.type
-            val cost: EditText = binding!!.cost
-            val description: EditText = binding!!.description
-            val salePercent: EditText = binding!!.salePercent
+            val name: EditText = binding.name
+            val type: EditText = binding.type
+            val cost: EditText = binding.cost
+            val description: EditText = binding.description
+            val salePercent: EditText = binding.salePercent
             var isValidated: Boolean = true
-            if ((name.getText().toString() == Constants.EMPTY_STRING)) {
-                name.setError("You must type the name!!")
+            if ((name.text.toString() == Constants.EMPTY_STRING)) {
+                name.error = "You must type the name!!"
                 isValidated = false
             }
-            if ((type.getText().toString() == Constants.EMPTY_STRING)) {
-                type.setError("You must type the type!!")
+            if ((type.text.toString() == Constants.EMPTY_STRING)) {
+                type.error = "You must type the type!!"
                 isValidated = false
             }
-            if (((cost.getText().toString() == Constants.EMPTY_STRING) || cost.getText().toString()
+            if (((cost.text.toString() == Constants.EMPTY_STRING) || cost.text.toString()
                     .toInt() <= 0)
             ) {
-                cost.setError("You must type the cost!!")
+                cost.error = "You must type the cost!!"
                 isValidated = false
             }
-            if (((salePercent.getText()
-                    .toString() == Constants.EMPTY_STRING) || salePercent.getText().toString()
+            if (((salePercent.text
+                    .toString() == Constants.EMPTY_STRING) || salePercent.text.toString()
                     .toInt() < 0)
             ) {
-                salePercent.setError("You must type the salePercent!!!")
+                salePercent.error = "You must type the salePercent!!!"
                 isValidated = false
             }
-            if ((description.getText().toString() == Constants.EMPTY_STRING)) {
-                description.setError("You must type the cost!!")
+            if ((description.text.toString() == Constants.EMPTY_STRING)) {
+                description.error = "You must type the cost!!"
                 isValidated = false
             }
             return isValidated

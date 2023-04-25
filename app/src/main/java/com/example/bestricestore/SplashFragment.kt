@@ -18,15 +18,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class SplashFragment constructor() : Fragment() {
-    public override fun onCreateView(
+class SplashFragment : Fragment() {
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val handler: Handler = Handler()
         handler.postDelayed(object : Runnable {
-            public override fun run() {
+            override fun run() {
                 nextFragment()
             }
         }, 2000)
@@ -34,46 +34,46 @@ class SplashFragment constructor() : Fragment() {
     }
 
     private fun nextFragment() {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             Navigation.findNavController(requireView()).navigate(R.id.phoneSignUpFragment)
         } else {
             FirebaseFirestore.getInstance().collection(Constants.FS_USER)
-                .document(user.getUid()).get()
+                .document(user.uid).get()
                 .addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot?> {
                     //lay du lieu
-                    public override fun onComplete(task: Task<DocumentSnapshot?>) {
-                        if (task.isSuccessful()) {
-                            val document: DocumentSnapshot = task.getResult()!!
+                    override fun onComplete(task: Task<DocumentSnapshot?>) {
+                        if (task.isSuccessful) {
+                            val document: DocumentSnapshot = task.result!!
                             if (document.exists()) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    "DocumentSnapshot data: " + document.getData()
+                                    "DocumentSnapshot data: " + document.data
                                 )
                                 val roles: String? = document.getString("roles")
                                 if ((roles == Constants.FS_ROLE_BAN)) {
                                     Toast.makeText(
-                                        getContext(),
+                                        context,
                                         "Your account has been banned!",
                                         Toast.LENGTH_LONG
                                     ).show()
                                     Navigation.findNavController(requireView()).navigate(R.id.phoneSignUpFragment)
                                 } else if ((roles == Constants.DELIVERER_REGISTER_WAITING)) {
                                     Toast.makeText(
-                                        getContext(),
+                                        context,
                                         "Your account is being register! Please wait for our call!",
                                         Toast.LENGTH_LONG
                                     ).show()
                                     Navigation.findNavController(requireView()).navigate(R.id.phoneSignUpFragment)
                                 } else if ((roles == Constants.DELIVERER_REGISTER_DECLINED)) {
                                     Toast.makeText(
-                                        getContext(),
+                                        context,
                                         "Your account register is declined! Check more information in your email!",
                                         Toast.LENGTH_LONG
                                     ).show()
                                     Navigation.findNavController(requireView()).navigate(R.id.phoneSignUpFragment)
                                 } else {
-                                    Toast.makeText(getContext(), "Welcome!", Toast.LENGTH_LONG)
+                                    Toast.makeText(context, "Welcome!", Toast.LENGTH_LONG)
                                         .show()
                                     Navigation.findNavController(requireView()).navigate(R.id.mainFragment)
                                 }
@@ -82,7 +82,7 @@ class SplashFragment constructor() : Fragment() {
                                 Navigation.findNavController(requireView()).navigate(R.id.selectRoleFragment)
                             }
                         } else {
-                            Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                            Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                         }
                     }
                 })

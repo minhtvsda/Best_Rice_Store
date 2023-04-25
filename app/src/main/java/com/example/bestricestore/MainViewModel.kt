@@ -15,14 +15,14 @@ import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
-class MainViewModel constructor() : ViewModel() {
+class MainViewModel : ViewModel() {
 
 
     var foodList: MutableLiveData<List<FoodEntity>> = MutableLiveData()
     var foodListLike: MutableLiveData<List<FoodEntity>> = MutableLiveData()
     var foodListSell: MutableLiveData<List<FoodEntity>> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     // TODO: Implement the ViewModel
     //lay collection
@@ -37,15 +37,15 @@ class MainViewModel constructor() : ViewModel() {
                 .whereEqualTo("currentStatus", Constants.AVAILABLE_CURRENT_STATUS)
                 .get() //lay tat ca ve
                 .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    public override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                            for (document: QueryDocumentSnapshot in task.getResult()) {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                            for (document: QueryDocumentSnapshot in task.result) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    document.getId() + " => " + document.getData()
+                                    document.id + " => " + document.data
                                 )
                                 val f: FoodEntity =
-                                    FoodEntity.Companion.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                    FoodEntity.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                                     fList.add(f)
                             }
                             foodList.setValue(fList)
@@ -53,7 +53,7 @@ class MainViewModel constructor() : ViewModel() {
                             Log.w(
                                 Constants.FIRE_STORE,
                                 "Error getting documents.",
-                                task.getException()
+                                task.exception
                             )
                         }
                     }
@@ -66,15 +66,15 @@ class MainViewModel constructor() : ViewModel() {
             .whereEqualTo("currentStatus", Constants.AVAILABLE_CURRENT_STATUS)
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val f: FoodEntity =
-                                FoodEntity.Companion.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                FoodEntity.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             fList.add(f)
                         }
                         if (not_Type != "not like") {
@@ -113,15 +113,15 @@ class MainViewModel constructor() : ViewModel() {
             .orderBy("cost")
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val f: FoodEntity =
-                                FoodEntity.Companion.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                FoodEntity.getFoodFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             fList.add(f)
                         }
                         foodList.setValue(fList)
@@ -129,7 +129,7 @@ class MainViewModel constructor() : ViewModel() {
                         Log.w(
                             Constants.FIRE_STORE,
                             "Error getting documents.",
-                            task.getException()
+                            task.exception
                         )
                     }
                 }

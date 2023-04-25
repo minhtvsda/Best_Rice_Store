@@ -20,18 +20,18 @@ import com.example.bestricestore.databinding.FragmentCheckFeedbackBinding
 import com.example.bestricestore.feedbackimport.CheckFeedbackListAdapter
 import java.util.*
 
-class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter.ListItemListener {
+class CheckFeedbackFragment : Fragment(), CheckFeedbackListAdapter.ListItemListener {
     private var mViewModel: CheckFeedbackViewModel? = null
     private var binding: FragmentCheckFeedbackBinding? = null
     private var adapter: CheckFeedbackListAdapter? = null
     var role: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+    ): View {
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         //get activity, app chinh la ca activity chua fragment  nay
-        val ab: ActionBar? = app!!.getSupportActionBar() //lay phan giai mau tim
+        val ab: ActionBar? = app!!.supportActionBar //lay phan giai mau tim
         ab!!.setHomeButtonEnabled(true)
         ab.setDisplayShowHomeEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
@@ -43,16 +43,16 @@ class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
-                getContext(),
-                (LinearLayoutManager(getContext()).getOrientation())
+                context,
+                (LinearLayoutManager(context).orientation)
             )
         )
         mViewModel!!.feedbackList.observe(
-            getViewLifecycleOwner()
+            viewLifecycleOwner
         ) { feedbacks: List<Feedback> ->
             adapter = CheckFeedbackListAdapter(feedbacks, this)
-            binding!!.recyclerView.setAdapter(adapter)
-            binding!!.recyclerView.setLayoutManager(LinearLayoutManager(getActivity()))
+            binding!!.recyclerView.adapter = adapter
+            binding!!.recyclerView.layoutManager = LinearLayoutManager(activity)
         }
         role = requireArguments().getString("role", "")
         if (role === Constants.EMPTY_STRING) {
@@ -61,7 +61,7 @@ class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter
             mViewModel!!.getFeedbacksByStatus(Constants.FEEDBACK_NOT_RESPONDED)
             binding!!.buttonRespond.visibility = View.VISIBLE
         }
-        binding!!.buttonRespond.setOnClickListener(View.OnClickListener { v: View? -> viewallResponds() })
+        binding!!.buttonRespond.setOnClickListener({ v: View? -> viewallResponds() })
         return binding!!.root
     }
 
@@ -71,7 +71,7 @@ class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter
         findNavController(requireView()).navigate(R.id.checkRespondFragment, b)
     }
 
-    public override fun onItemClick(feedbackId: String?) {
+    override fun onItemClick(feedbackId: String?) {
         val b: Bundle = Bundle()
         b.putString("feedbackId", feedbackId)
         if (role === Constants.EMPTY_STRING) {
@@ -81,26 +81,26 @@ class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter
         }
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_check_feedbacks, menu)
         val menuItem: MenuItem = menu.findItem(R.id.action_search_feedback)
         val sv = MenuItemCompat.getActionView(menuItem) as android.widget.SearchView
-        sv.setQueryHint("Search by phone, date, username...")
+        sv.queryHint = "Search by phone, date, username..."
         sv.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-            public override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
-            public override fun onQueryTextChange(newText: String): Boolean {
+            override fun onQueryTextChange(newText: String): Boolean {
                 filter(newText)
                 return false
             }
         })
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_search_not_responded -> if (role === Constants.EMPTY_STRING) {
                 mViewModel!!.usergetFeedbacksByStatus(Constants.FEEDBACK_NOT_RESPONDED)
             } else {
@@ -124,7 +124,7 @@ class CheckFeedbackFragment constructor() : Fragment(), CheckFeedbackListAdapter
 
     private fun filter(text: String) {
         val filterList = ArrayList<Feedback?>()
-        for (fb: Feedback? in mViewModel!!.feedbackList.getValue()!!) {
+        for (fb: Feedback? in mViewModel!!.feedbackList.value!!) {
             if ((fb!!.userPhone!!.uppercase(Locale.getDefault())
                     .contains(text.uppercase(Locale.getDefault()))
                         || fb.userName!!.uppercase(Locale.getDefault())

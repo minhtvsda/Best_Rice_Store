@@ -10,25 +10,25 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
-class AddFeedbackViewModel constructor() : ViewModel() {
+class AddFeedbackViewModel : ViewModel() {
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     var muser: User? = null
     fun sendFeedback(f: Feedback?) {
         db.collection(Constants.FS_FEEDBACK)
-            .document("Feedback" + (Constants.TIME - Date().getTime()))
+            .document("Feedback" + (Constants.TIME - Date().time))
             .set((f)!!)
     }
 
     init {
         db.collection(Constants.FS_USER)
-            .document(user!!.getUid())
+            .document(user!!.uid)
             .get()
             .addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
-                public override fun onComplete(task: Task<DocumentSnapshot>) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().exists()) {
-                            muser = User.Companion.getUserFromFireStore(task.getResult())
+                override fun onComplete(task: Task<DocumentSnapshot>) {
+                    if (task.isSuccessful) {
+                        if (task.result.exists()) {
+                            muser = User.getUserFromFireStore(task.result)
                         }
                     }
                 }

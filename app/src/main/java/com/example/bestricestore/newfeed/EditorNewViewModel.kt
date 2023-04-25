@@ -11,13 +11,13 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import java.util.*
 
-class EditorNewViewModel constructor() : ViewModel() {
+class EditorNewViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var news: MutableLiveData<NewEntity?> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     fun getNewById(id: String?) {
         if (id === Constants.NEW_ID) {
-            news.setValue(NewEntity())
+            news.value = NewEntity()
             return
         }
         val docRef: DocumentReference = db.collection(Constants.FS_NEW_SET).document(
@@ -25,18 +25,18 @@ class EditorNewViewModel constructor() : ViewModel() {
         ) // lay document theo id
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
             //lay du lieu
-            public override fun onComplete(task: Task<DocumentSnapshot>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot = task.result
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        val n: NewEntity = NewEntity.Companion.getNewFromFirestore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        val n: NewEntity = NewEntity.getNewFromFirestore(document)
                         news.setValue(n)
                     } else {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
         })
@@ -48,9 +48,9 @@ class EditorNewViewModel constructor() : ViewModel() {
             val id: String = "New" + (Constants.TIME - Date().time)
             //insert new
             db.collection(Constants.FS_NEW_SET).document(id)
-                .set((bMap)!!)
+                .set((bMap))
                 .addOnCompleteListener(object : OnCompleteListener<Void?> {
-                    public override fun onComplete(task: Task<Void?>) {
+                    override fun onComplete(task: Task<Void?>) {
                         Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully written!")
                     }
                 })
@@ -58,14 +58,14 @@ class EditorNewViewModel constructor() : ViewModel() {
             //update
             db.collection(Constants.FS_NEW_SET)
                 .document(updateNew.id.toString()) //chon id ma ta muon sua
-                .set((bMap)!!) //sua noi dung thong qua bMap
+                .set((bMap)) //sua noi dung thong qua bMap
                 .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                    public override fun onSuccess(aVoid: Void?) {
+                    override fun onSuccess(aVoid: Void?) {
                         Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully written!")
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         Log.w(Constants.FIRE_STORE, "Error writing document", e)
                     }
                 })
@@ -73,15 +73,15 @@ class EditorNewViewModel constructor() : ViewModel() {
     }
 
     fun deleteNew() {
-        db.collection(Constants.FS_NEW_SET).document(news.getValue()!!.id.toString())
+        db.collection(Constants.FS_NEW_SET).document(news.value!!.id.toString())
             .delete()
             .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                public override fun onSuccess(aVoid: Void?) {
+                override fun onSuccess(aVoid: Void?) {
                     Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully deleted!")
                 }
             })
             .addOnFailureListener(object : OnFailureListener {
-                public override fun onFailure(e: Exception) {
+                override fun onFailure(e: Exception) {
                     Log.w(Constants.FIRE_STORE, "Error deleting document", e)
                 }
             })

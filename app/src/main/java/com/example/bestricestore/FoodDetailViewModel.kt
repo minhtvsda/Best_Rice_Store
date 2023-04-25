@@ -16,10 +16,10 @@ import com.google.firebase.firestore.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FoodDetailViewModel constructor() : ViewModel() {
+class FoodDetailViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var food: MutableLiveData<FoodEntity> = MutableLiveData()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var binding: FragmentFoodDetailBinding
     private lateinit var navController: NavController
@@ -39,10 +39,10 @@ class FoodDetailViewModel constructor() : ViewModel() {
 
             //lay du lieu
             if (task.isSuccessful) {
-                val document: DocumentSnapshot = task.getResult()!!
+                val document: DocumentSnapshot = task.result!!
                 if (document.exists()) {
-                    Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                    val f: FoodEntity = FoodEntity.Companion.getFoodFromFirestore(document)
+                    Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                    val f: FoodEntity = FoodEntity.getFoodFromFirestore(document)
                     food.value = f
                     val doc = db.collection(Constants.FS_FOOD_SET+"/${f.id}/like")
                         .document(user!!.uid)
@@ -51,7 +51,7 @@ class FoodDetailViewModel constructor() : ViewModel() {
                                 task -> if (task.isSuccessful){
                             val document = task.result
                             if (document.exists()){
-                                Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
+                                Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
                                 val isLike = document.data!!["isLike"].toString()
                                 if (isLike == "true"){
                                     binding.likeButton.isLiked = true
@@ -63,7 +63,7 @@ class FoodDetailViewModel constructor() : ViewModel() {
                     Log.d(Constants.FIRE_STORE, "No such document")
                 }
             } else {
-                Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
             }
         }
     }
@@ -99,7 +99,7 @@ class FoodDetailViewModel constructor() : ViewModel() {
         userToken: String?
     ) {
         val userRef: DocumentReference = db.collection(Constants.FS_USER).document(
-            user!!.getUid()
+            user!!.uid
         )
         val docRef: DocumentReference = db.collection(Constants.FS_FOOD_SET).document(
             (foodId)!!

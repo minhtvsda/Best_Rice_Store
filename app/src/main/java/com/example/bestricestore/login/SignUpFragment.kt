@@ -23,25 +23,25 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(SignUpViewModel::class.java)
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
         progressDialog = ProgressDialog(context)
-        binding!!.btnsignupCustomer.setOnClickListener { v: View? -> onClickSignUp(Constants.ROLE_CUSTOMER) }
-        binding!!.btnsignupDelivery.setOnClickListener { v: View? -> onClickSignUp(Constants.ROLE_DELIVERER) }
-        return binding!!.root
+        binding.btnsignupCustomer.setOnClickListener { v: View? -> onClickSignUp(Constants.ROLE_CUSTOMER) }
+        binding.btnsignupDelivery.setOnClickListener { v: View? -> onClickSignUp(Constants.ROLE_DELIVERER) }
+        return binding.root
     }
 
     private fun onClickSignUp(role: String?) {
-        val strEmail = binding!!.email.text.toString().trim { it <= ' ' }
-        val strPassword = binding!!.password.text.toString().trim { it <= ' ' }
-        val strAddress = binding!!.address.text.toString().trim { it <= ' ' }
-        val username = binding!!.username.text.toString().trim { it <= ' ' }
+        val strEmail = binding.email.text.toString().trim { it <= ' ' }
+        val strPassword = binding.password.text.toString().trim { it <= ' ' }
+        val strAddress = binding.address.text.toString().trim { it <= ' ' }
+        val username = binding.username.text.toString().trim { it <= ' ' }
         if (strAddress == Constants.EMPTY_STRING || strEmail == Constants.EMPTY_STRING || strAddress == Constants.EMPTY_STRING || username == Constants.EMPTY_STRING) {
             Toast.makeText(context, "Please type all the fields!!", Toast.LENGTH_SHORT).show()
             return
         }
-        mViewModel!!.onClickSignUp(context, username, strEmail, strPassword, strAddress, role)
+        mViewModel.onClickSignUp(context, username, strEmail, strPassword, strAddress, role)
         //        if (mViewModel.Signup){
 //        Navigation.findNavController(getView()).navigate(R.id.mainFragment);
 //        }

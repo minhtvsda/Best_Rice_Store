@@ -29,20 +29,20 @@ import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddFeedbackFragment constructor() : Fragment() {
+class AddFeedbackFragment : Fragment() {
     private var mViewModel: AddFeedbackViewModel? = null
     private var binding: FragmentAddFeedbackBinding? = null
     var uri: Uri? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(AddFeedbackViewModel::class.java)
         binding = FragmentAddFeedbackBinding.inflate(inflater, container, false)
-        binding!!.imageFeedback.setOnClickListener(View.OnClickListener({ v: View? -> selectImage() }))
-        binding!!.buttonSend.setOnClickListener(View.OnClickListener({ v: View? -> sendFeedback() }))
-        binding!!.date.setOnClickListener(View.OnClickListener({ v: View? -> selectDate() }))
-        return binding!!.getRoot()
+        binding!!.imageFeedback.setOnClickListener({ v: View? -> selectImage() })
+        binding!!.buttonSend.setOnClickListener({ v: View? -> sendFeedback() })
+        binding!!.date.setOnClickListener({ v: View? -> selectDate() })
+        return binding!!.root
     }
 
     private fun selectDate() {
@@ -53,7 +53,7 @@ class AddFeedbackFragment constructor() : Fragment() {
         val etDate: TextView = binding!!.date
         val datePickerDialog: DatePickerDialog = DatePickerDialog(
             (requireContext()), object : OnDateSetListener {
-                public override fun onDateSet(
+                override fun onDateSet(
                     view: DatePicker,
                     year1: Int,
                     month1: Int,
@@ -62,8 +62,8 @@ class AddFeedbackFragment constructor() : Fragment() {
                     var month1: Int = month1
                     month1 = month1 + 1
                     val date: String = day1.toString() + "/" + month1 + "/" + year1
-                    etDate.setText(date)
-                    Toast.makeText(getContext(), "Select date successfully!", Toast.LENGTH_LONG)
+                    etDate.text = date
+                    Toast.makeText(context, "Select date successfully!", Toast.LENGTH_LONG)
                         .show()
                 }
             }, year, month, day
@@ -72,12 +72,12 @@ class AddFeedbackFragment constructor() : Fragment() {
     }
 
     private fun sendFeedback() {
-        val progressDialog: ProgressDialog = ProgressDialog(getContext())
+        val progressDialog: ProgressDialog = ProgressDialog(context)
         progressDialog.show()
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
-        val title: String = binding!!.editTextTitle.getText().toString()
-        val purpose: String = binding!!.editTextPurpose.getText().toString()
-        val date: String = binding!!.date.getText().toString()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val title: String = binding!!.editTextTitle.text.toString()
+        val purpose: String = binding!!.editTextPurpose.text.toString()
+        val date: String = binding!!.date.text.toString()
         if (uri != null) {
             val formatter: SimpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
             val now: Date = Date()
@@ -86,24 +86,24 @@ class AddFeedbackFragment constructor() : Fragment() {
                 FirebaseStorage.getInstance().getReference("feedback/" + fileName)
             storageReference.putFile(uri!!)
                 .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                    public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                    override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                         // lay url theo cach moi
-                        val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                            .getReference()!!.getDownloadUrl()
+                        val task: Task<Uri> = taskSnapshot.metadata!!
+                            .reference!!.downloadUrl
                         task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                            public override fun onSuccess(uri: Uri) {
+                            override fun onSuccess(uri: Uri) {
                                 val f: Feedback = Feedback(
                                     title,
                                     date,
                                     purpose,
                                     uri.toString(),
-                                    user!!.getUid(),
-                                    user.getPhoneNumber(),
+                                    user!!.uid,
+                                    user.phoneNumber,
                                     mViewModel!!.muser!!.username,
                                     Constants.FEEDBACK_NOT_RESPONDED
                                 )
                                 mViewModel!!.sendFeedback(f)
-                                Toast.makeText(getContext(), "Successful!!", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Successful!!", Toast.LENGTH_SHORT)
                                     .show()
                                 progressDialog.dismiss()
                                 findNavController(requireView()).navigateUp()
@@ -112,10 +112,10 @@ class AddFeedbackFragment constructor() : Fragment() {
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         progressDialog.dismiss()
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "Failed to upload Image!Try again.",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -127,13 +127,13 @@ class AddFeedbackFragment constructor() : Fragment() {
                 date,
                 purpose,
                 null,
-                user!!.getUid(),
-                user.getPhoneNumber(),
+                user!!.uid,
+                user.phoneNumber,
                 mViewModel!!.muser!!.username,
                 Constants.FEEDBACK_NOT_RESPONDED
             )
             mViewModel!!.sendFeedback(f)
-            Toast.makeText(getContext(), "Successful!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Successful!!", Toast.LENGTH_SHORT).show()
             progressDialog.dismiss()
             findNavController(requireView()).navigateUp()
         }
@@ -141,15 +141,15 @@ class AddFeedbackFragment constructor() : Fragment() {
 
     private fun selectImage() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 100)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == 100) && (data != null) && (data.getData() != null)) {
-            uri = data.getData()
+        if ((requestCode == 100) && (data != null) && (data.data != null)) {
+            uri = data.data
             binding!!.imageFeedback.setImageURI(uri)
         }
     }

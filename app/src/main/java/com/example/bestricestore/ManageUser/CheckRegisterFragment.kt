@@ -30,14 +30,14 @@ import com.example.bestricestore.databinding.FragmentCheckRegisterBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CheckRegisterFragment constructor() : Fragment(), RegisterListAdapter.ListUserListener {
+class CheckRegisterFragment : Fragment(), RegisterListAdapter.ListUserListener {
     private lateinit var mViewModel: CheckRegisterViewModel
     private lateinit var binding: FragmentCheckRegisterBinding
     private lateinit var adapter: RegisterListAdapter
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(CheckRegisterViewModel::class.java)
         binding = FragmentCheckRegisterBinding.inflate(inflater, container, false)
         val app = activity as AppCompatActivity?
@@ -48,7 +48,7 @@ class CheckRegisterFragment constructor() : Fragment(), RegisterListAdapter.List
         ab.setDisplayHomeAsUpEnabled(true)
         ab.setHomeAsUpIndicator(R.drawable.ic_baseline_home_24)
         setHasOptionsMenu(true)
-        val rv = binding!!.recyclerView
+        val rv = binding.recyclerView
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
@@ -56,32 +56,32 @@ class CheckRegisterFragment constructor() : Fragment(), RegisterListAdapter.List
                 (LinearLayoutManager(context).orientation)
             )
         )
-        mViewModel!!.userList.observe(
+        mViewModel.userList.observe(
             viewLifecycleOwner
         ) { userList: List<User> ->
             adapter = RegisterListAdapter(userList, this)
-            binding!!.recyclerView.setAdapter(adapter)
-            binding!!.recyclerView.setLayoutManager(LinearLayoutManager(getActivity()))
+            binding.recyclerView.adapter = adapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         }
         binding.bottomNavigation.setOnNavigationItemSelectedListener { onNavigationItemSelected(it) }
-        return binding!!.getRoot()
+        return binding.root
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_checkregister, menu)
         val menuItem: MenuItem = menu.findItem(R.id.action_search_users) // get our menu item.
         //Interface for direct access to a previously created menu item.
         val sv: SearchView =
             MenuItemCompat.getActionView(menuItem) as SearchView // getting search view of our item.
-        sv.setMaxWidth(Int.MAX_VALUE)
+        sv.maxWidth = Int.MAX_VALUE
         // below line is to call set on query text listener method.
         sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            public override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
-            public override fun onQueryTextChange(newText: String): Boolean {
+            override fun onQueryTextChange(newText: String): Boolean {
                 filter(newText)
                 return false
             }
@@ -90,7 +90,7 @@ class CheckRegisterFragment constructor() : Fragment(), RegisterListAdapter.List
 
     fun filter(text: String) {
         val filterList: MutableList<User> = ArrayList()
-        for (user: User in mViewModel!!.userList.getValue()!!) {
+        for (user: User in mViewModel.userList.value!!) {
             if ((user.phoneNumber!!.uppercase(Locale.getDefault())
                     .contains(text.uppercase(Locale.getDefault()))
                         || user.username!!.uppercase(Locale.getDefault())
@@ -101,27 +101,27 @@ class CheckRegisterFragment constructor() : Fragment(), RegisterListAdapter.List
                 filterList.add(user)
             }
         }
-        adapter!!.filterList(filterList)
+        adapter.filterList(filterList)
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            R.id.action_search_deliverer_register -> mViewModel!!.getUserByRole((Constants.DELIVERER_REGISTER_WAITING))
-            R.id.action_search_deliverer_register_declined -> mViewModel!!.getUserByRole((Constants.DELIVERER_REGISTER_DECLINED))
-            R.id.action_show_all_deliverer_register -> mViewModel!!.allDeliRegister
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search_deliverer_register -> mViewModel.getUserByRole((Constants.DELIVERER_REGISTER_WAITING))
+            R.id.action_search_deliverer_register_declined -> mViewModel.getUserByRole((Constants.DELIVERER_REGISTER_DECLINED))
+            R.id.action_show_all_deliverer_register -> mViewModel.allDeliRegister
             android.R.id.home -> findNavController(requireView()).navigate(R.id.mainFragment)
             else -> super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    public override fun onItemClick(userId: String?) {
+    override fun onItemClick(userId: String?) {
         val b: Bundle = Bundle()
         b.putString("userId", userId)
         findNavController(requireView()).navigate(R.id.editorCheckFragment, b)
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
     }
     fun onNavigationItemSelected(item: MenuItem): Boolean {

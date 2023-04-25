@@ -10,12 +10,12 @@ import com.example.bestricestore.R
 import com.example.bestricestore.databinding.FragmentSelectRoleBinding
 
 
-class SelectRoleFragment constructor() : Fragment() {
+class SelectRoleFragment : Fragment() {
     private var binding: FragmentSelectRoleBinding? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSelectRoleBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         binding!!.buttonCustomer.setOnClickListener { v: View? ->
@@ -28,6 +28,6 @@ class SelectRoleFragment constructor() : Fragment() {
                 requireView()
             ).navigate(R.id.deliSignUpFragment)
         }
-        return binding!!.getRoot()
+        return binding!!.root
     }
 }

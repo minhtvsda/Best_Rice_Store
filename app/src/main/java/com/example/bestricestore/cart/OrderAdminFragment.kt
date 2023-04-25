@@ -42,10 +42,10 @@ class OrderAdminFragment : Fragment(), AdorderListAdapter.ListAdorderListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val app = activity as AppCompatActivity?
         app!!.supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-        app!!.supportActionBar!!.title = "Checking Order"
+        app.supportActionBar!!.title = "Checking Order"
 
         setHasOptionsMenu(true)
         mViewModel = ViewModelProvider(this).get(OrderAdminViewModel::class.java)
@@ -199,7 +199,7 @@ class OrderAdminFragment : Fragment(), AdorderListAdapter.ListAdorderListener {
                     Toast.makeText(context, "Cancel bill successfully!!", Toast.LENGTH_SHORT).show()
                 }
         }
-        db.collection(Constants.FS_FOOD_CART).document(cartId!!)
+        db.collection(Constants.FS_FOOD_CART).document(cartId)
             .get()
             .addOnCompleteListener {
                 this.pushNotification(status, it.result.getString("userToken").toString())
@@ -237,7 +237,7 @@ class OrderAdminFragment : Fragment(), AdorderListAdapter.ListAdorderListener {
         fragment.show(childFragmentManager, "TAG1")
     }
     fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.Home -> Navigation.findNavController(requireView()).navigate(R.id.mainFragment)
             R.id.shoppingCart -> Toast.makeText(context, "You are still there", Toast.LENGTH_SHORT).show()
             R.id.News -> Navigation.findNavController(requireView()).navigate(R.id.newFragment)

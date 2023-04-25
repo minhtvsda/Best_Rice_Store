@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener, FoodLikeListAdapter.ListFoodLikeListener,
+class MainFragment : Fragment(), FoodListAdapter.ListFoodListener, FoodLikeListAdapter.ListFoodLikeListener,
                             FoodSoldListAdapter.ListFoodSoldListener{
     private lateinit var mViewModel: MainViewModel
     private lateinit var binding: FragmentMainBinding
@@ -44,10 +44,10 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
     private lateinit var navController : NavController
     var userRole: String? = null
     var tokenId: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val app: AppCompatActivity? = activity as AppCompatActivity?
         val ab: ActionBar? = app!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(true)
@@ -76,7 +76,7 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
             DividerItemDecoration(
                 context, LinearLayoutManager.HORIZONTAL
             ))
-        val rv = binding!!.recyclerView
+        val rv = binding.recyclerView
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
@@ -99,15 +99,15 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
             rvSold.adapter = adapterSold
         }
 
-        mViewModel!!.foodList.observe(
+        mViewModel.foodList.observe(
             viewLifecycleOwner
         ) {
                 foodList: List<FoodEntity> ->
             adapter = FoodListAdapter(requireContext(), foodList, this)
-            binding!!.recyclerView.adapter = adapter
-            binding!!.recyclerView.layoutManager = LinearLayoutManager(activity)
+            binding.recyclerView.adapter = adapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         }
-        binding!!.fabAddFood.setOnClickListener {
+        binding.fabAddFood.setOnClickListener {
 //            FirebaseMessaging.getInstance().subscribeToTopic(Constants.TOPIC_ORDER)
             onItemClick(Constants.NEW_ID)
 //            sortByType()
@@ -127,19 +127,19 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
             if (it != null){
                 tokenId = it
-                db.collection(Constants.FS_USER).document(user.getUid()).update("tokenId", it)
+                db.collection(Constants.FS_USER).document(user.uid).update("tokenId", it)
             }
         }
             .addOnFailureListener{
                 Toast.makeText(context, "Failed save token", Toast.LENGTH_LONG).show()
             }
-        db.collection(Constants.FS_USER).document(user.getUid()).get()
+        db.collection(Constants.FS_USER).document(user.uid).get()
             .addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
                 override fun onComplete(task: Task<DocumentSnapshot>) {
-                    if (task.isSuccessful()) {
-                        val document: DocumentSnapshot = task.getResult()
+                    if (task.isSuccessful) {
+                        val document: DocumentSnapshot = task.result
                         if (document.exists()) {
-                            Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.getData())
+                            Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
                             userRole = document.getString("roles")
                             if ((userRole == Constants.ROLE_ADMIN)) {
                                 binding.fabAddFood.visibility = View.VISIBLE
@@ -154,7 +154,7 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
             })
     }
 
-    public override fun onItemClick(foodId: String?) {
+    override fun onItemClick(foodId: String?) {
         val bundle: Bundle = Bundle()
         bundle.putString("foodId", foodId)
         if ((userRole == Constants.ROLE_ADMIN)) {
@@ -166,23 +166,23 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
     }
 
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
         val menuItem: MenuItem = menu.findItem(R.id.action_search) // get our menu item.
         //Interface for direct access to a previously created menu item.
         val sv =
             MenuItemCompat.getActionView(menuItem) as androidx.appcompat.widget.SearchView // getting search view of our item.
-        sv.setMaxWidth(Int.MAX_VALUE)
+        sv.maxWidth = Int.MAX_VALUE
         // below line is to call set on query text listener method.
-        sv.setQueryHint("Search by Type, Name, Cost")
+        sv.queryHint = "Search by Type, Name, Cost"
         sv.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            public override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
-            public override fun onQueryTextChange(newText: String): Boolean {
-                if (mViewModel!!.foodList.getValue() != null) {
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (mViewModel.foodList.value != null) {
                     filter(newText)
                 }
                 return false
@@ -192,7 +192,7 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
 
     fun filter(text: String) {
         val filterList: MutableList<FoodEntity> = ArrayList()
-        for (fe: FoodEntity in mViewModel!!.foodList.getValue()!!) {
+        for (fe: FoodEntity in mViewModel.foodList.value!!) {
             if ((fe.name!!.uppercase(Locale.getDefault())
                     .contains(text.uppercase(Locale.getDefault()))
                         || fe.type!!.uppercase(Locale.getDefault())
@@ -203,19 +203,19 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
                 filterList.add(fe)
             }
         }
-        adapter!!.filterList(filterList)
+        adapter.filterList(filterList)
     }
 
     fun filterType(type: String): Boolean {
         val filterList: MutableList<FoodEntity> = ArrayList()
-        for (fe: FoodEntity in mViewModel!!.foodList.getValue()!!) {
+        for (fe: FoodEntity in mViewModel.foodList.value!!) {
             if (fe.type!!.lowercase(Locale.getDefault())
                     .contains(type.lowercase(Locale.getDefault()))
             ) {
                 filterList.add(fe)
             }
         }
-        adapter!!.filterList(filterList)
+        adapter.filterList(filterList)
         return true
     }
 
@@ -226,15 +226,15 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
         val edt_cost_from: EditText = dialog.findViewById(R.id.cost_from)
         val edt_cost_to: EditText = dialog.findViewById(R.id.cost_to)
         val button: Button = dialog.findViewById(R.id.btn_search_by_cost)
-        button.setOnClickListener(View.OnClickListener { v: View? ->
-            val cost_from: String = edt_cost_from.getText().toString()
-            val cost_to: String = edt_cost_to.getText().toString()
+        button.setOnClickListener({ v: View? ->
+            val cost_from: String = edt_cost_from.text.toString()
+            val cost_to: String = edt_cost_to.text.toString()
             if (((cost_from == Constants.EMPTY_STRING) || (cost_to == Constants.EMPTY_STRING))) {
-                Toast.makeText(getActivity(), "Please type the correct Cost!", Toast.LENGTH_SHORT)
+                Toast.makeText(activity, "Please type the correct Cost!", Toast.LENGTH_SHORT)
                     .show()
             } else if (cost_from.toInt() >= cost_to.toInt()) {
                 Toast.makeText(
-                    getActivity(),
+                    activity,
                     "The cost from must be lower than cost to!",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -242,7 +242,7 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
                 filterbyCost(cost_from, cost_to)
                 dialog.dismiss()
                 Toast.makeText(
-                    getContext(),
+                    context,
                     "Search cost from" + cost_from + "VND to " + cost_to + "VND",
                     Toast.LENGTH_LONG
                 ).show()
@@ -296,16 +296,16 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
         val from: Int = cost_from.toInt()
         val to: Int = cost_to.toInt()
         val filterList: MutableList<FoodEntity> = ArrayList()
-        for (fe: FoodEntity in mViewModel.foodList.getValue()!!) {
+        for (fe: FoodEntity in mViewModel.foodList.value!!) {
             if (fe.cost in from..to) {
                 filterList.add(fe)
             }
         }
-        adapter!!.filterList(filterList)
+        adapter.filterList(filterList)
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> searchMenu()
             R.id.action_search_type_drink -> filterType("Drink")
             R.id.action_search_type_rice -> filterType("Rice")
@@ -320,7 +320,7 @@ class MainFragment constructor() : Fragment(), FoodListAdapter.ListFoodListener,
     }
 
     fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.Home -> {
                 if (userRole == Constants.ROLE_ADMIN) {
                 mViewModel.getFoodAdmin()

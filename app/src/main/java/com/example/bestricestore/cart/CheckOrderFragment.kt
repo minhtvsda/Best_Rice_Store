@@ -41,8 +41,8 @@ class CheckOrderFragment : Fragment(), OrderListAdapter.ListOrderListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+    ): View {
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         val ab: ActionBar? = app!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(false)
         ab.title = "Checking Order"
@@ -66,7 +66,7 @@ class CheckOrderFragment : Fragment(), OrderListAdapter.ListOrderListener {
         }
         mViewModel!!.profile
         binding!!.bottomNavigation.setOnNavigationItemSelectedListener {
-            onNavigationItemSelected(it as MenuItem)
+            onNavigationItemSelected(it)
         }
         return binding!!.root
     }
@@ -121,7 +121,7 @@ class CheckOrderFragment : Fragment(), OrderListAdapter.ListOrderListener {
                     )
                 }
         }
-        db.collection(Constants.FS_FOOD_CART).document(cartId!!)
+        db.collection(Constants.FS_FOOD_CART).document(cartId)
             .get()
             .addOnCompleteListener {
                 this.pushNotification(status, it.result.getString("userToken").toString()
@@ -183,7 +183,7 @@ class CheckOrderFragment : Fragment(), OrderListAdapter.ListOrderListener {
     }
 
     private fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.Home -> Navigation.findNavController(requireView()).navigate(R.id.mainFragment)
             R.id.shoppingCart -> Toast.makeText(
                 context,

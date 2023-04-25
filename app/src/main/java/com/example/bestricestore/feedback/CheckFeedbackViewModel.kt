@@ -12,12 +12,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 
-class CheckFeedbackViewModel constructor() : ViewModel() {
+class CheckFeedbackViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var feedbackList: MutableLiveData<List<Feedback>> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     var user: FirebaseUser? = FirebaseAuth.getInstance()
-        .getCurrentUser()//bien moi 1 document tu firestore(K,V) thanh be//colection la` 1 tap hop cac document
+        .currentUser//bien moi 1 document tu firestore(K,V) thanh be//colection la` 1 tap hop cac document
 
     //lay collection
     //lay tat ca ve
@@ -27,15 +27,15 @@ class CheckFeedbackViewModel constructor() : ViewModel() {
             db.collection(Constants.FS_FEEDBACK) //lay collection
                 .get() //lay tat ca ve
                 .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    public override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                            for (document: QueryDocumentSnapshot in task.getResult()) {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                            for (document: QueryDocumentSnapshot in task.result) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    document.getId() + " => " + document.getData()
+                                    document.id + " => " + document.data
                                 )
                                 val f: Feedback =
-                                    Feedback.Companion.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                    Feedback.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                                 fList.add(f)
                             }
                             feedbackList.setValue(fList)
@@ -43,7 +43,7 @@ class CheckFeedbackViewModel constructor() : ViewModel() {
                             Log.w(
                                 Constants.FIRE_STORE,
                                 "Error getting documents.",
-                                task.getException()
+                                task.exception
                             )
                         }
                     }
@@ -53,24 +53,24 @@ class CheckFeedbackViewModel constructor() : ViewModel() {
     fun usergetFeedbacks() {
         val fList: MutableList<Feedback> = ArrayList()
         db.collection(Constants.FS_FEEDBACK) //lay collection
-            .whereEqualTo("userId", user!!.getUid())
+            .whereEqualTo("userId", user!!.uid)
             .limit(20)
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val f: Feedback =
-                                Feedback.Companion.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                Feedback.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             fList.add(f)
                         }
                         feedbackList.setValue(fList)
                     } else {
-                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.getException())
+                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.exception)
                     }
                 }
             })
@@ -79,25 +79,25 @@ class CheckFeedbackViewModel constructor() : ViewModel() {
     fun usergetFeedbacksByStatus(status: String?) {
         val fList: MutableList<Feedback> = ArrayList()
         db.collection(Constants.FS_FEEDBACK) //lay collection
-            .whereEqualTo("userId", user!!.getUid())
+            .whereEqualTo("userId", user!!.uid)
             .whereEqualTo("feedbackStatus", status)
             .limit(20)
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val f: Feedback =
-                                Feedback.Companion.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                Feedback.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             fList.add(f)
                         }
                         feedbackList.setValue(fList)
                     } else {
-                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.getException())
+                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.exception)
                     }
                 }
             })
@@ -109,20 +109,20 @@ class CheckFeedbackViewModel constructor() : ViewModel() {
             .whereEqualTo("feedbackStatus", status)
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val f: Feedback =
-                                Feedback.Companion.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                Feedback.getFeedbackFromFirestore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             fList.add(f)
                         }
                         feedbackList.setValue(fList)
                     } else {
-                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.getException())
+                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.exception)
                     }
                 }
             })

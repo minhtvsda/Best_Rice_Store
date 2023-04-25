@@ -9,12 +9,12 @@ import androidx.navigation.Navigation.findNavController
 import com.example.bestricestore.databinding.FragmentManageUsersBinding
 
 
-class ManageUsersFragment constructor() : Fragment() {
+class ManageUsersFragment : Fragment() {
     private var binding: FragmentManageUsersBinding? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentManageUsersBinding.inflate(inflater, container, false)
         binding!!.buttonViewAll.setOnClickListener { v: View? ->
@@ -27,6 +27,6 @@ class ManageUsersFragment constructor() : Fragment() {
                 requireView()
             ).navigate(R.id.checkRegisterFragment)
         }
-        return binding!!.getRoot()
+        return binding!!.root
     }
 }

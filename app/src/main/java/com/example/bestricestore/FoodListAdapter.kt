@@ -29,19 +29,17 @@ class FoodListAdapter constructor(
 
         fun bindData(fData: FoodEntity) {
             val sale: Int = 100 - fData.salePercent
-            foodViewBinding.foodName.setText(fData.name)
-            foodViewBinding.foodCost.setText("Price:" + fData.cost + " VND")
-            foodViewBinding.getRoot()
-                .setOnClickListener(View.OnClickListener({ v: View? -> listener.onItemClick(fData.id) }))
+            foodViewBinding.foodName.text = fData.name
+            foodViewBinding.foodCost.text = "Price:" + fData.cost + " VND"
+            foodViewBinding.root
+                .setOnClickListener({ v: View? -> listener.onItemClick(fData.id) })
 
             foodViewBinding.foodType.text = "Type: ${fData.type}"
             if (sale != 100) {
-                foodViewBinding.foodCost.setPaintFlags(foodViewBinding.foodCost.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
-                foodViewBinding.foodCostSale.setVisibility(View.VISIBLE)
-                foodViewBinding.foodCostSale.setText(
-                    "SalePrice: " + (fData.cost * sale / 100
-                            ) + " (" + fData.salePercent + "%)"
-                )
+                foodViewBinding.foodCost.paintFlags = foodViewBinding.foodCost.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                foodViewBinding.foodCostSale.visibility = View.VISIBLE
+                foodViewBinding.foodCostSale.text = "SalePrice: " + (fData.cost * sale / 100
+                        ) + " (" + fData.salePercent + "%)"
             }
             foodViewBinding.totalLike.text = "Total like : ${fData.totalLike}"
             foodViewBinding.totalSold.text = "Total sold : ${fData.totalSell}"
@@ -56,22 +54,22 @@ class FoodListAdapter constructor(
         notifyDataSetChanged()
     }
 
-    public override fun onCreateViewHolder(
+    override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): FoodListAdapter.FoodViewHolder {
-        val view: View = LayoutInflater.from(parent.getContext())
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_food, parent, false) //create view for each of food
         //not only view, we need ViewHolder, so
         return FoodViewHolder(view)
     }
 
-    public override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
         val fData: FoodEntity = foodList.get(position)
         holder.bindData(fData)
     }
 
-    public override fun getItemCount(): Int {
+    override fun getItemCount(): Int {
         return foodList.size
     }
 }

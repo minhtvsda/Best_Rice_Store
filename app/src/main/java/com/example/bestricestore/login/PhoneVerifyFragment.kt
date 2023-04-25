@@ -22,40 +22,40 @@ import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCall
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.concurrent.TimeUnit
 
-class PhoneVerifyFragment constructor() : Fragment() {
+class PhoneVerifyFragment : Fragment() {
     private var binding: FragmentPhoneVerifyBinding? = null
     private var mverificationId: String? = null
     private var phoneNumber: String? = null
     var progressDialog: ProgressDialog? = null
     private var mforceResendingToken: ForceResendingToken? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentPhoneVerifyBinding.inflate(inflater, container, false)
         mverificationId = requireArguments().getString("Id")
         phoneNumber = requireArguments().getString("phoneNumber")
-        progressDialog = ProgressDialog(getContext())
+        progressDialog = ProgressDialog(context)
         progressDialog!!.setTitle("Loading!")
         binding!!.buttonVerify.setOnClickListener { v: View? -> VerifyOtp() }
-        binding!!.phoneNumber.setText(phoneNumber)
-        binding!!.sendAgain.setOnClickListener(View.OnClickListener({ v: View? -> sendAgain() }))
-        return binding!!.getRoot()
+        binding!!.phoneNumber.text = phoneNumber
+        binding!!.sendAgain.setOnClickListener({ v: View? -> sendAgain() })
+        return binding!!.root
     }
 
     private fun sendAgain() {
         val mCallbacks: OnVerificationStateChangedCallbacks =
             object : OnVerificationStateChangedCallbacks() {
-                public override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
+                override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
                     signInWithPhoneAuthCredential(phoneAuthCredential)
                 }
 
-                public override fun onVerificationFailed(e: FirebaseException) {
-                    Toast.makeText(getContext(), e.message, Toast.LENGTH_SHORT).show()
+                override fun onVerificationFailed(e: FirebaseException) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                 }
 
-                public override fun onCodeSent(
+                override fun onCodeSent(
                     verificationId: String,
                     forceResendingToken: ForceResendingToken
                 ) {
@@ -75,15 +75,15 @@ class PhoneVerifyFragment constructor() : Fragment() {
     }
 
     private fun VerifyOtp() {
-        if ((binding!!.editOtp.getText().toString() == Constants.EMPTY_STRING)) {
-            Toast.makeText(getContext(), "You have to type the phone number!", Toast.LENGTH_SHORT)
+        if ((binding!!.editOtp.text.toString() == Constants.EMPTY_STRING)) {
+            Toast.makeText(context, "You have to type the phone number!", Toast.LENGTH_SHORT)
                 .show()
             return
         }
         progressDialog!!.show()
         val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(
             (mverificationId)!!,
-            binding!!.editOtp.getText().toString()
+            binding!!.editOtp.text.toString()
         )
         signInWithPhoneAuthCredential(credential)
     }
@@ -91,20 +91,20 @@ class PhoneVerifyFragment constructor() : Fragment() {
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(requireActivity(), object : OnCompleteListener<AuthResult?> {
-                public override fun onComplete(task: Task<AuthResult?>) {
-                    if (task.isSuccessful()) {
+                override fun onComplete(task: Task<AuthResult?>) {
+                    if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
 //                            FirebaseUser user = task.getResult().getUser();
                         // Update UI
-                        Toast.makeText(getContext(), "Successful!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Successful!", Toast.LENGTH_SHORT).show()
                         progressDialog!!.dismiss()
                         findNavController(requireView()).navigate(R.id.splashFragment)
                     } else {
-                        if (task.getException() is FirebaseAuthInvalidCredentialsException) {
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
                             // The verification code entered was invalid
                             progressDialog!!.dismiss()
                             Toast.makeText(
-                                getContext(),
+                                context,
                                 "The verification code entered was invalid",
                                 Toast.LENGTH_SHORT
                             ).show()

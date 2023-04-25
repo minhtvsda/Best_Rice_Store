@@ -18,52 +18,53 @@ import com.example.bestricestore.ImageDialogFragment
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EditorRespondFragment constructor() : Fragment() {
+class EditorRespondFragment : Fragment() {
     private lateinit var mViewModel: EditorRespondViewModel
     private lateinit var binding: FragmentEditorRespondBinding
     var isFeedbackImageFitScreen: Boolean = false
     var isRespondImageFitScreen: Boolean = false
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(EditorRespondViewModel::class.java)
         binding = FragmentEditorRespondBinding.inflate(inflater, container, false)
-        mViewModel!!.respond.observe(
-            getViewLifecycleOwner()
+        mViewModel.respond.observe(
+            viewLifecycleOwner
         ) { respond: Respond ->
-            binding!!.date.setText("Date: " + respond.date)
-            binding!!.purpose.setText("Purpose: " + respond.purpose)
-            binding!!.respondTitle.setText("RespondTitle: " + respond.title)
-                    binding !!. userName . setText ("UserName: " + respond.userName)
-                    binding !!. respondMainAnswer . setText ("Main answer: " + respond.respondAnswer)
-                    binding !!. title . setText ("Feedback title: " + respond.title)
-                    binding !!. userPhone . setText ("UserPhone: " + respond.userPhone)
-                    Glide . with (requireContext()).load(respond.respondUrl)
+            binding.date.text = "Date: " + respond.date
+            binding.purpose.text = "Purpose: " + respond.purpose
+            binding.respondTitle.text = "RespondTitle: " + respond.title
+            binding. userName.text = "UserName: " + respond.userName
+            binding. respondMainAnswer.text = "Main answer: " + respond.respondAnswer
+            binding. title.text = "Feedback title: " + respond.title
+            binding. userPhone.text = "UserPhone: " + respond.userPhone;
+
+            Glide . with (requireContext()).load(respond.respondUrl)
                 .error(R.drawable.profile).fitCenter()
-                .into(binding!!.imageRespond)
+                .into(binding.imageRespond)
                     Glide . with (requireContext()).load(respond.feedbackUrl)
                 .error(R.drawable.profile).fitCenter()
-                .into(binding!!.imageFeedback)
-                    binding !!. imageRespond . setOnClickListener (View.OnClickListener { v: View? ->
+                .into(binding.imageFeedback)
+                    binding. imageRespond . setOnClickListener ({ v: View? ->
                         showImageDialog(
                             respond.respondUrl
                         )
                     })
-                    binding !!. imageFeedback . setOnClickListener (View.OnClickListener { v: View? ->
+                    binding. imageFeedback . setOnClickListener ({ v: View? ->
                         showImageDialog(
                             respond.feedbackUrl
                         )
                     })
         }
         val respondId: String? = requireArguments().getString("respondId")
-        mViewModel!!.getRespondById(respondId)
-        binding!!.btnDelete.setOnClickListener { v: View? ->
+        mViewModel.getRespondById(respondId)
+        binding.btnDelete.setOnClickListener { v: View? ->
             deleteRespond(
                 respondId
             )
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun showImageDialog(url: String?) {
@@ -71,8 +72,8 @@ class EditorRespondFragment constructor() : Fragment() {
         val result: Bundle = Bundle()
         result.putString("bundleKeyImageUrl", url)
         // The child fragment needs to still set the result on its parent fragment manager
-        getChildFragmentManager().setFragmentResult("requestKey", result)
-        fragment.show(getChildFragmentManager(), "TAG")
+        childFragmentManager.setFragmentResult("requestKey", result)
+        fragment.show(childFragmentManager, "TAG")
     }
 
     private fun deleteRespond(id: String?) {

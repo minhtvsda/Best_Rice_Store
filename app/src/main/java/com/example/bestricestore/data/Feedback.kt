@@ -13,7 +13,7 @@ class Feedback {
     var userName: String? = null
     var feedbackStatus: String? = null
 
-    constructor() {}
+    constructor()
     constructor(
         title: String?,
         date: String?,

@@ -8,7 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 
-class UserEditorNewViewModel constructor() : ViewModel() {
+class UserEditorNewViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var news: MutableLiveData<NewEntity?> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -18,18 +18,18 @@ class UserEditorNewViewModel constructor() : ViewModel() {
         ) // lay document theo id
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
             //lay du lieu
-            public override fun onComplete(task: Task<DocumentSnapshot>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot = task.result
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        val n: NewEntity = NewEntity.Companion.getNewFromFirestore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        val n: NewEntity = NewEntity.getNewFromFirestore(document)
                         news.setValue(n)
                     } else {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
         })

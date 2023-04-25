@@ -29,14 +29,14 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EditorUsersFragment constructor() : Fragment() {
+class EditorUsersFragment : Fragment() {
     private lateinit var mViewModel: EditorUsersViewModel
     private lateinit var binding: FragmentEditorUsersBinding
     var role : String?  = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(EditorUsersViewModel::class.java)
         binding = FragmentEditorUsersBinding.inflate(inflater, container, false)
         //        AppCompatActivity app = (AppCompatActivity)getActivity();
@@ -47,34 +47,34 @@ class EditorUsersFragment constructor() : Fragment() {
 //        ab.setDisplayHomeAsUpEnabled(true);
 //        ab.setHomeAsUpIndicator(R.drawable.ic_outline_save_alt_24);
 //        setHasOptionsMenu(true);
-        mViewModel!!.muser.observe(
+        mViewModel.muser.observe(
             viewLifecycleOwner
         ) { user: User ->
-            binding!!.userPhoneNumber.setText("User Phone Number:\n "+user.phoneNumber)
-            binding!!.userName.setText("User name:\n "+user.username)
-            binding!!.userAddress.setText("User address:\n "+user.address)
-            binding!!.userEmail.setText("User email:\n "+user.email)
-            binding!!.userRoles.text = "User role: "+user.roles
+            binding.userPhoneNumber.text = "User Phone Number:\n "+user.phoneNumber
+            binding.userName.text = "User name:\n "+user.username
+            binding.userAddress.text = "User address:\n "+user.address
+            binding.userEmail.text = "User email:\n "+user.email
+            binding.userRoles.text = "User role: "+user.roles
             if ((user.roles == Constants.FS_ROLE_BAN)) {
-                binding!!.btnBanUser.visibility = View.GONE
+                binding.btnBanUser.visibility = View.GONE
             }
         }
         val userId: String? = requireArguments().getString("userId")
-        mViewModel!!.getUserById(userId)
-        binding!!.btnBanUser.setOnClickListener {
+        mViewModel.getUserById(userId)
+        binding.btnBanUser.setOnClickListener {
             role = Constants.FS_ROLE_BAN
-            binding!!.userRoles.text = "User role: " + Constants.FS_ROLE_BAN
+            binding.userRoles.text = "User role: " + Constants.FS_ROLE_BAN
             Toast.makeText(
-                getContext(),
+                context,
                 "You have banned the user by role! Now Click Save User to done! ", Toast.LENGTH_LONG
             ).show()
         }
-        binding!!.buttonSave.setOnClickListener { v: View? -> savethenReturn() }
-        return binding!!.getRoot()
+        binding.buttonSave.setOnClickListener { v: View? -> savethenReturn() }
+        return binding.root
     }
 
     private fun savethenReturn(): Boolean {
-        val id: String = mViewModel!!.muser.getValue()!!.id!!
+        val id: String = mViewModel.muser.value!!.id!!
         val user = mViewModel.muser.value!!
         val PhoneNumber: String = mViewModel.muser.value?.phoneNumber!!
         val name: String = user.username!!
@@ -85,8 +85,8 @@ class EditorUsersFragment constructor() : Fragment() {
         FirebaseFirestore.getInstance().collection(Constants.FS_USER).document(id)
             .set(u)
             .addOnCompleteListener(object : OnCompleteListener<Void?> {
-                public override fun onComplete(task: Task<Void?>) {
-                    Toast.makeText(getContext(), "Update user successful!", Toast.LENGTH_LONG)
+                override fun onComplete(task: Task<Void?>) {
+                    Toast.makeText(context, "Update user successful!", Toast.LENGTH_LONG)
                         .show()
                     findNavController(requireView()).navigateUp()
                 }
@@ -94,8 +94,8 @@ class EditorUsersFragment constructor() : Fragment() {
         return true
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             android.R.id.home -> savethenReturn()
             else -> super.onOptionsItemSelected(item)
         }

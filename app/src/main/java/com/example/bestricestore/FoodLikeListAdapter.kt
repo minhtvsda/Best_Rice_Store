@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.bestricestore.data.FoodEntity
 import com.example.bestricestore.databinding.ListFoodLikeBinding
 
@@ -28,18 +27,16 @@ class FoodLikeListAdapter constructor(
 
         fun bindData(fData: FoodEntity) {
             val sale: Int = 100 - fData.salePercent
-            foodViewBinding.foodName.setText(fData.name)
-            foodViewBinding.foodCost.setText("Price:" + fData.cost + " VND")
+            foodViewBinding.foodName.text = fData.name
+            foodViewBinding.foodCost.text = "Price:" + fData.cost + " VND"
             foodViewBinding.root
-                .setOnClickListener(View.OnClickListener({ v: View? -> listener.onItemClick(fData.id) }))
+                .setOnClickListener({ v: View? -> listener.onItemClick(fData.id) })
 
             if (sale != 100) {
-                foodViewBinding.foodCost.setPaintFlags(foodViewBinding.foodCost.getPaintFlags() or Paint.STRIKE_THRU_TEXT_FLAG)
-                foodViewBinding.foodCostSale.setVisibility(View.VISIBLE)
-                foodViewBinding.foodCostSale.setText(
-                    "SalePrice: " + (fData.cost * sale / 100
-                            ) + " (" + fData.salePercent + "%)"
-                )
+                foodViewBinding.foodCost.paintFlags = foodViewBinding.foodCost.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                foodViewBinding.foodCostSale.visibility = View.VISIBLE
+                foodViewBinding.foodCostSale.text = "SalePrice: " + (fData.cost * sale / 100
+                        ) + " (" + fData.salePercent + "%)"
             }
             foodViewBinding.foodTotalLike.text = "Total like : ${fData.totalLike}"
             Glide.with(context).load(fData.imageUrl)
@@ -54,11 +51,11 @@ class FoodLikeListAdapter constructor(
         notifyDataSetChanged()
     }
 
-    public override fun onCreateViewHolder(
+    override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): FoodLikeListAdapter.FoodViewHolder {
-        val view: View = LayoutInflater.from(parent.getContext())
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_food_like, parent, false) //create view for each of food
         //not only view, we need ViewHolder, so
         return FoodViewHolder(view)
@@ -69,7 +66,7 @@ class FoodLikeListAdapter constructor(
         holder.bindData(fData)     }
 
 
-    public override fun getItemCount(): Int {
+    override fun getItemCount(): Int {
         return foodList.size
     }
 }

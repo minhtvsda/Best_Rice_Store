@@ -24,51 +24,51 @@ import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCall
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.concurrent.TimeUnit
 
-class PhoneSignUpFragment constructor() : Fragment() {
+class PhoneSignUpFragment : Fragment() {
     private var binding: FragmentPhoneSignUpBinding? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         (activity as AppCompatActivity).supportActionBar!!.title = "Log In"
         // Inflate the layout for this fragment
         binding = FragmentPhoneSignUpBinding.inflate(inflater, container, false)
-        binding!!.button.setOnClickListener(View.OnClickListener({ v: View? -> VerifyPhone() }))
+        binding!!.button.setOnClickListener({ v: View? -> VerifyPhone() })
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
-                public override fun handleOnBackPressed() {
+                override fun handleOnBackPressed() {
                     // Handle the back button even
                     Toast.makeText(context, "You have to login first!", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback)
-        return binding!!.getRoot()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        return binding!!.root
     }
 
     private fun VerifyPhone() {
-        if ((binding!!.editPhoneNumber.getText().toString() == Constants.EMPTY_STRING)) {
-            Toast.makeText(getContext(), "You have to type phone number!", Toast.LENGTH_SHORT)
+        if ((binding!!.editPhoneNumber.text.toString() == Constants.EMPTY_STRING)) {
+            Toast.makeText(context, "You have to type phone number!", Toast.LENGTH_SHORT)
                 .show()
             return
         }
-        val progressDialog: ProgressDialog = ProgressDialog(getContext())
+        val progressDialog: ProgressDialog = ProgressDialog(context)
         progressDialog.show()
-        val phoneNumber: String = binding!!.editPhoneNumber.getText().toString().trim { it <= ' ' }
+        val phoneNumber: String = binding!!.editPhoneNumber.text.toString().trim { it <= ' ' }
         val options: PhoneAuthOptions = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
             .setPhoneNumber(phoneNumber) // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(requireActivity()) // Activity (for callback binding)
             .setCallbacks(object : OnVerificationStateChangedCallbacks() {
-                public override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
+                override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
                     signInWithPhoneAuthCredential(phoneAuthCredential)
                 }
 
-                public override fun onVerificationFailed(e: FirebaseException) {
-                    Toast.makeText(getContext(), e.message, Toast.LENGTH_SHORT).show()
+                override fun onVerificationFailed(e: FirebaseException) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                 }
 
-                public override fun onCodeSent(
+                override fun onCodeSent(
                     verificationId: String,
                     forceResendingToken: ForceResendingToken
                 ) {
@@ -87,17 +87,17 @@ class PhoneSignUpFragment constructor() : Fragment() {
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(requireActivity(), object : OnCompleteListener<AuthResult> {
-                public override fun onComplete(task: Task<AuthResult>) {
-                    if (task.isSuccessful()) {
+                override fun onComplete(task: Task<AuthResult>) {
+                    if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val user: FirebaseUser? = task.getResult().getUser()
+                        val user: FirebaseUser? = task.result.user
                         // Update UI
 //                            gotoMainactivity();
                     } else {
-                        if (task.getException() is FirebaseAuthInvalidCredentialsException) {
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
                             // The verification code entered was invalid
                             Toast.makeText(
-                                getContext(),
+                                context,
                                 "The verification code entered was invalid",
                                 Toast.LENGTH_SHORT
                             ).show()

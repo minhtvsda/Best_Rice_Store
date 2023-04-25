@@ -30,77 +30,77 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class NewFragment constructor() : Fragment(), ListNewListener {
+class NewFragment : Fragment(), ListNewListener {
     private lateinit var mViewModel: NewViewModel
     private lateinit var binding: FragmentNewBinding
     private var adapter: NewListAdapter? = null
     var userRole: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+    ): View {
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         val ab: ActionBar? = app!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(false)
         ab.title = "New Feed"
         mViewModel = ViewModelProvider(this).get(NewViewModel::class.java)
         binding = FragmentNewBinding.inflate(inflater, container, false)
         hideUIwithRoles()
-        val rv: RecyclerView = binding!!.recyclerViewNew
+        val rv: RecyclerView = binding.recyclerViewNew
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
-                getContext(),
-                (LinearLayoutManager(getContext()).getOrientation())
+                context,
+                (LinearLayoutManager(context).orientation)
             )
         )
-        mViewModel!!.newList.observe(
+        mViewModel.newList.observe(
             viewLifecycleOwner,
-            Observer { newList: List<NewEntity> ->
-                adapter = NewListAdapter(getContext(), newList, this)
-                binding!!.recyclerViewNew.setAdapter(adapter)
-                binding!!.recyclerViewNew.setLayoutManager(LinearLayoutManager(getActivity()))
+            { newList: List<NewEntity> ->
+                adapter = NewListAdapter(context, newList, this)
+                binding.recyclerViewNew.adapter = adapter
+                binding.recyclerViewNew.layoutManager = LinearLayoutManager(activity)
             }
         )
-        binding!!.fabAddNew.setOnClickListener { v: View? ->
+        binding.fabAddNew.setOnClickListener { v: View? ->
             onItemClick(
                 Constants.NEW_ID
             )
         }
-        binding!!.bottomNavigation.setOnNavigationItemSelectedListener { i: MenuItem ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { i: MenuItem ->
             onNavigationItemSelected(
                 i
             )
         }
-        binding!!.btnFeedback.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.btnFeedback.setOnClickListener({ v: View? ->
             findNavController(requireView()).navigate(R.id.feedbackFragment)
         })
-        binding!!.btnCheckFeedback.setOnClickListener { v: View? ->
+        binding.btnCheckFeedback.setOnClickListener { v: View? ->
             val bundle: Bundle = Bundle()
             bundle.putString("role", Constants.ROLE_ADMIN)
             findNavController(requireView()).navigate(R.id.checkFeedbackFragment, bundle)
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun hideUIwithRoles() {
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             return
         }
-        db.collection(Constants.FS_USER).document(user.getUid()).get()
+        db.collection(Constants.FS_USER).document(user.uid).get()
             .addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
-                public override fun onComplete(task: Task<DocumentSnapshot>) {
-                    if (task.isSuccessful()) {
-                        val document: DocumentSnapshot = task.getResult()
+                override fun onComplete(task: Task<DocumentSnapshot>) {
+                    if (task.isSuccessful) {
+                        val document: DocumentSnapshot = task.result
                         if (document.exists()) {
-                            Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.getData())
+                            Log.d(ContentValues.TAG, "DocumentSnapshot data: " + document.data)
                             userRole = document.getString("roles")
                             if ((userRole == Constants.ROLE_ADMIN)) {
-                                binding!!.fabAddNew.setVisibility(View.VISIBLE)
-                                binding!!.btnCheckFeedback.setVisibility(View.VISIBLE)
-                                binding!!.btnFeedback.setVisibility(View.GONE)
+                                binding.fabAddNew.visibility = View.VISIBLE
+                                binding.btnCheckFeedback.visibility = View.VISIBLE
+                                binding.btnFeedback.visibility = View.GONE
                             }
                         }
                     }
@@ -108,7 +108,7 @@ class NewFragment constructor() : Fragment(), ListNewListener {
             })
     }
 
-    public override fun onItemClick(newId: String) {
+    override fun onItemClick(newId: String) {
         val bundle: Bundle = Bundle()
         bundle.putString("newId", newId)
         if ((userRole == Constants.ROLE_ADMIN)) {
@@ -119,7 +119,7 @@ class NewFragment constructor() : Fragment(), ListNewListener {
     }
 
     fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.Home -> findNavController(requireView()).navigate(R.id.mainFragment)
             R.id.shoppingCart -> {
                 if ((userRole == Constants.ROLE_CUSTOMER)) {
@@ -134,7 +134,7 @@ class NewFragment constructor() : Fragment(), ListNewListener {
             }
             R.id.News -> {
                 mViewModel.news
-                Toast.makeText(getContext(), "You are still in!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "You are still in!", Toast.LENGTH_SHORT).show()
             }
             R.id.Profile -> findNavController(requireView()).navigate(R.id.profileFragment)
         }

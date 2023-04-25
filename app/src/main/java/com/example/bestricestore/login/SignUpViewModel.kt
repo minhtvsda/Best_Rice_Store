@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-class SignUpViewModel constructor() : ViewModel() {
+class SignUpViewModel : ViewModel() {
     var Signup: Boolean = false
     fun onClickSignUp(
         context: Context?,
@@ -35,14 +35,14 @@ class SignUpViewModel constructor() : ViewModel() {
         progressDialog.show()
         mAuth.createUserWithEmailAndPassword((strEmail)!!, (strPassword)!!)
             .addOnCompleteListener(object : OnCompleteListener<AuthResult?> {
-                public override fun onComplete(task: Task<AuthResult?>) {
-                    if (task.isSuccessful()) {
+                override fun onComplete(task: Task<AuthResult?>) {
+                    if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val user: FirebaseUser? = mAuth.getCurrentUser()
+                        val user: FirebaseUser? = mAuth.currentUser
                         user!!.sendEmailVerification()
                             .addOnCompleteListener(object : OnCompleteListener<Void?> {
-                                public override fun onComplete(task: Task<Void?>) {
-                                    if (task.isSuccessful()) {
+                                override fun onComplete(task: Task<Void?>) {
+                                    if (task.isSuccessful) {
                                         Toast.makeText(
                                             context,
                                             "Register successful! Please verify your account!",
@@ -50,7 +50,7 @@ class SignUpViewModel constructor() : ViewModel() {
                                         ).show()
                                         Signup = true
                                         val u: User = User(username, strEmail, strAddress, role, "","")
-                                        db.collection("users").document(user.getUid()).set(u)
+                                        db.collection("users").document(user.uid).set(u)
                                         progressDialog.dismiss()
                                     } else {
                                         Toast.makeText(

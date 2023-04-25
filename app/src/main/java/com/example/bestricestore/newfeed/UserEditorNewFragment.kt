@@ -13,21 +13,21 @@ import com.example.bestricestore.data.NewEntity
 import com.example.bestricestore.databinding.FragmentUserEditorNewBinding
 import com.example.bestricestore.ImageDialogFragment
 
-class UserEditorNewFragment constructor() : Fragment() {
+class UserEditorNewFragment : Fragment() {
     private var mViewModel: UserEditorNewViewModel? = null
     private var binding: FragmentUserEditorNewBinding? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(UserEditorNewViewModel::class.java)
         binding = FragmentUserEditorNewBinding.inflate(inflater, container, false)
         mViewModel!!.news.observe(
             viewLifecycleOwner
         ) { newEntity: NewEntity? ->
-            binding!!.title.setText("Title: " + newEntity!!.title)
-            binding!!.newInfo.setText("Main information: \n" + newEntity.newInfo)
-            binding!!.textDate.setText("Date: " + newEntity.date)
+            binding!!.title.text = "Title: " + newEntity!!.title
+            binding!!.newInfo.text = "Main information: \n" + newEntity.newInfo
+            binding!!.textDate.text = "Date: " + newEntity.date
             if (newEntity.imageUrl != null) {
                 Glide.with(requireContext()).load(newEntity.imageUrl)
                     .error(R.drawable.profile).into(binding!!.imageNew)
@@ -39,7 +39,7 @@ class UserEditorNewFragment constructor() : Fragment() {
         }
         val newId: String? = requireArguments().getString("newId")
         mViewModel!!.getNewById(newId)
-        return binding!!.getRoot()
+        return binding!!.root
     }
 
     private fun showImage(url: String?) {

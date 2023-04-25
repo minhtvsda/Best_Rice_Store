@@ -24,7 +24,7 @@ class CartItem {
 //    var totalLike : Int? = 0
 //    var totalSell : Int? = 0
 
-    constructor() {}
+    constructor()
     constructor(
         id: String?,
         type: String?,

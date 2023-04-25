@@ -31,78 +31,78 @@ import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DeliSignUpFragment constructor() : Fragment() {
+class DeliSignUpFragment : Fragment() {
     private lateinit var binding: FragmentDeliSignUpBinding
     private var uriId: Uri? = null
     private var uri2: Uri? = null
     private var uri3: Uri? = null
     private var photoLink: String? = null
     private var photoLink2: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentDeliSignUpBinding.inflate(inflater, container, false)
-        binding!!.imageViewId.setOnClickListener(View.OnClickListener({ v: View? -> selectImage() }))
-        binding!!.imageViewDrivingLicence.setOnClickListener(View.OnClickListener({ v: View? -> selectImage2() }))
-        binding!!.imageViewMotorbikeLicence.setOnClickListener(View.OnClickListener({ v: View? -> selectImage3() }))
-        binding!!.button.setOnClickListener(View.OnClickListener({ v: View? -> register() }))
-        return binding!!.getRoot()
+        binding.imageViewId.setOnClickListener({ v: View? -> selectImage() })
+        binding.imageViewDrivingLicence.setOnClickListener({ v: View? -> selectImage2() })
+        binding.imageViewMotorbikeLicence.setOnClickListener({ v: View? -> selectImage3() })
+        binding.button.setOnClickListener({ v: View? -> register() })
+        return binding.root
     }
 
     private fun selectImage() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 101)
     }
 
     private fun selectImage2() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 102)
     }
 
     private fun selectImage3() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 103)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == 102) && (data != null) && (data.getData() != null)) {
-            uri2 = data.getData()
-            binding!!.imageViewDrivingLicence.setImageURI(uri2)
+        if ((requestCode == 102) && (data != null) && (data.data != null)) {
+            uri2 = data.data
+            binding.imageViewDrivingLicence.setImageURI(uri2)
         }
-        if ((requestCode == 101) && (data != null) && (data.getData() != null)) {
-            uriId = data.getData()
-            binding!!.imageViewId.setImageURI(uriId)
+        if ((requestCode == 101) && (data != null) && (data.data != null)) {
+            uriId = data.data
+            binding.imageViewId.setImageURI(uriId)
         }
-        if ((requestCode == 103) && (data != null) && (data.getData() != null)) {
-            uri3 = data.getData()
-            binding!!.imageViewMotorbikeLicence.setImageURI(uri3)
+        if ((requestCode == 103) && (data != null) && (data.data != null)) {
+            uri3 = data.data
+            binding.imageViewMotorbikeLicence.setImageURI(uri3)
         }
     }
 
     private fun register() {
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val progressDialog: ProgressDialog = ProgressDialog(activity)
         progressDialog.setTitle("Sending your request")
         progressDialog.show()
-        val username: String = binding!!.edtName.getText().toString()
-        val email: String = binding!!.edtEmail.getText().toString()
-        val address: String = binding!!.edtAddress.getText().toString()
+        val username: String = binding.edtName.text.toString()
+        val email: String = binding.edtEmail.text.toString()
+        val address: String = binding.edtAddress.text.toString()
         val u= User(
             username,
             email,
             address,
             Constants.DELIVERER_REGISTER_WAITING,
-            user!!.getPhoneNumber(),
+            user!!.phoneNumber,
             ""
         )
         val formatter: SimpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
@@ -112,21 +112,21 @@ class DeliSignUpFragment constructor() : Fragment() {
             FirebaseStorage.getInstance().getReference("customer/" + fileName)
         storageReference.putFile((uriId)!!)
             .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                     // lay url theo cach moi
-                    val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                        .getReference()!!.getDownloadUrl()
+                    val task: Task<Uri> = taskSnapshot.metadata!!
+                        .reference!!.downloadUrl
                     task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                        public override fun onSuccess(uri: Uri) {
+                        override fun onSuccess(uri: Uri) {
                             photoLink = uri.toString()
                         }
                     })
                 }
             })
             .addOnFailureListener(object : OnFailureListener {
-                public override fun onFailure(e: Exception) {
+                override fun onFailure(e: Exception) {
                     Toast.makeText(
-                        getContext(),
+                        context,
                         "Failed to upload Image!Try again.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -136,12 +136,12 @@ class DeliSignUpFragment constructor() : Fragment() {
             FirebaseStorage.getInstance().getReference("customer/1" + fileName)
         storageReference2.putFile((uri2)!!)
             .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                     // lay url theo cach moi
-                    val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                        .getReference()!!.getDownloadUrl()
+                    val task: Task<Uri> = taskSnapshot.metadata!!
+                        .reference!!.downloadUrl
                     task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                        public override fun onSuccess(uri: Uri) {
+                        override fun onSuccess(uri: Uri) {
                             photoLink2 = uri.toString()
                             //                                    Toast.makeText(getContext(), "Upload image successfully!", Toast.LENGTH_SHORT).show();
                         }
@@ -152,24 +152,24 @@ class DeliSignUpFragment constructor() : Fragment() {
             FirebaseStorage.getInstance().getReference("customer/2" + fileName)
         storageReference3.putFile((uri3)!!)
             .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                     // lay url theo cach moi
-                    val task: Task<Uri> = taskSnapshot.getMetadata()!!
-                        .getReference()!!.getDownloadUrl()
+                    val task: Task<Uri> = taskSnapshot.metadata!!
+                        .reference!!.downloadUrl
                     task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                        public override fun onSuccess(uri: Uri) {
+                        override fun onSuccess(uri: Uri) {
                             val photoLink3: String = uri.toString()
                             val c: DeliLink = DeliLink(photoLink, photoLink2, photoLink3)
                             db.collection(Constants.FS_DELI_LINK).document(
-                                user.getUid()
+                                user.uid
                             )
                                 .set(c)
                             db.collection(Constants.FS_USER).document(
-                                user.getUid()
+                                user.uid
                             ).set(u)
                             progressDialog.dismiss()
                             Toast.makeText(
-                                getContext(),
+                                context,
                                 "Successful! Wait for the restaurant check your register! Please check your email daily!",
                                 Toast.LENGTH_LONG
                             ).show()
@@ -177,10 +177,10 @@ class DeliSignUpFragment constructor() : Fragment() {
                         }
                     })
                 }
-            }).addOnFailureListener(OnFailureListener { e: Exception? ->
+            }).addOnFailureListener({ e: Exception? ->
                 progressDialog.dismiss()
                 Toast.makeText(
-                    getContext(),
+                    context,
                     "Up load your image failed. Try again!",
                     Toast.LENGTH_LONG
                 ).show()

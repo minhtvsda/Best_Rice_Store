@@ -10,12 +10,10 @@ object Constants {
     const val ROLE_DELIVERER = "deliverer"
     const val ROLE_ADMIN = "admin"
     const val FS_USER = "users"
-    const val REQUEST_CODE = 2000
     const val STATUS_WAITING = "1.Waiting for deliverer's acceptance"
     const val STATUS_CANCEL = "0.Cancel the food"
     const val STATUS_DELIVERING = "2.Food is being delivered!"
     const val STATUS_DONE = "3.Done!"
-    const val FS_STORAGE_URL = "gs://appricestore.appspot.com"
     const val FS_NEW_SET = "newset"
     const val STATUS_ADMIN_CANCEL = "0.The bill cancels cause sold out! Sorry about that."
     const val STATUS_WAITING_RESTAURANT = "1. Waiting for the restaurant's accept!"

@@ -3,9 +3,7 @@ package com.example.bestricestore.data
 import com.google.firebase.firestore.DocumentSnapshot
 
 class DeliLink {
-    constructor() {
-
-    }
+    constructor()
     constructor(idUrl: String?, drivingUrl: String?, motorUrl: String?) {
         this.idUrl = idUrl
         this.drivingUrl = drivingUrl

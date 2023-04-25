@@ -37,17 +37,17 @@ import com.like.OnLikeListener
 import java.util.*
 
 
-class FoodDetailFragment constructor() : Fragment() {
+class FoodDetailFragment : Fragment() {
     private lateinit var mViewModel: FoodDetailViewModel
     private lateinit var binding: FragmentFoodDetailBinding
     private lateinit var dialogBinding: FragmentImageDialogBinding
     private lateinit var muser: User
     var foodCost: Int = 0
     var Sale: Int = 0
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val app: AppCompatActivity? = activity as AppCompatActivity?
         val ab: ActionBar? = app!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(false)
@@ -56,33 +56,33 @@ class FoodDetailFragment constructor() : Fragment() {
         mViewModel = ViewModelProvider(this).get(FoodDetailViewModel::class.java)
         binding = FragmentFoodDetailBinding.inflate(inflater, container, false)
         loadUser()
-        mViewModel!!.food.observe(
+        mViewModel.food.observe(
             viewLifecycleOwner
         ) { foodEntity: FoodEntity ->
             Sale = 100 - foodEntity.salePercent
-            binding!!.type.setText("Type: " + foodEntity.type)
-            binding!!.name.setText("Name: " + foodEntity.name)
-            binding!!.cost.setText("Cost: " + foodEntity.cost + " VND")
+            binding.type.text = "Type: " + foodEntity.type
+            binding.name.text = "Name: " + foodEntity.name
+            binding.cost.text = "Cost: " + foodEntity.cost + " VND"
             Glide.with(requireContext()).load(foodEntity.imageUrl)
-                .error(R.drawable.profile).into(binding!!.imageFood)
-            binding!!.description.setText("Description: " + foodEntity.description)
+                .error(R.drawable.profile).into(binding.imageFood)
+            binding.description.text = "Description: " + foodEntity.description
             foodCost = foodEntity.cost
-            binding!!.currentStatus.setText("CurrentStatus: \n" + foodEntity.currentStatus)
+            binding.currentStatus.text = "CurrentStatus: \n" + foodEntity.currentStatus
             if (Sale != 100) {
-                binding!!.cost.setPaintFlags(binding!!.cost.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG)
-                binding!!.saleCost.setText(""+(foodCost * Sale / 100) + " VND ( " + (100 - Sale) + "%)")
-                binding!!.saleCost.setVisibility(View.VISIBLE)
+                binding.cost.paintFlags = binding.cost.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                binding.saleCost.text = ""+(foodCost * Sale / 100) + " VND ( " + (100 - Sale) + "%)"
+                binding.saleCost.visibility = View.VISIBLE
             }
             if ((foodEntity.currentStatus == Constants.OUT_OF_STOCK_CURRENT_STATUS)) {
-                binding!!.btnOrder.visibility = View.GONE
-                binding!!.currentStatus.setTextColor(getResources().getColor(R.color.red))
+                binding.btnOrder.visibility = View.GONE
+                binding.currentStatus.setTextColor(resources.getColor(R.color.red))
             }
-            binding!!.imageFood.setOnClickListener { _: View? ->
+            binding.imageFood.setOnClickListener {
                 showImage(
                     foodEntity.imageUrl
                 )
             }
-            binding!!.description.setOnClickListener { v: View? ->
+            binding.description.setOnClickListener { v: View? ->
                 showDescription(
                     foodEntity.description
                 )
@@ -91,13 +91,13 @@ class FoodDetailFragment constructor() : Fragment() {
             binding.totalSell.text = foodEntity.totalSell.toString() + " have sold!"
         }
         val foodId: String? = requireArguments().getString("foodId")
-        mViewModel!!.getFoodById(foodId)
+        mViewModel.getFoodById(foodId)
         calculateTotalCost()
-        binding!!.btnAddressSet.setOnClickListener {
-            binding!!.address.setText(muser.address)
-            Toast.makeText(getContext(), "Use your address!", Toast.LENGTH_SHORT).show()
+        binding.btnAddressSet.setOnClickListener {
+            binding.address.setText(muser.address)
+            Toast.makeText(context, "Use your address!", Toast.LENGTH_SHORT).show()
         }
-        binding!!.btnOrder.setOnClickListener {
+        binding.btnOrder.setOnClickListener {
                 v: View? -> order()
 
         }
@@ -115,11 +115,11 @@ class FoodDetailFragment constructor() : Fragment() {
                 mViewModel.setUserClickDisLike()
             }
         })
-        return binding!!.root
+        return binding.root
     }
 
     private fun showDescription(description: String?) {
-        val dialog: AlertDialog.Builder = AlertDialog.Builder(getContext())
+        val dialog: AlertDialog.Builder = AlertDialog.Builder(context)
         dialog.setMessage("Description: $description")
         dialog.create().show()
     }
@@ -140,18 +140,18 @@ class FoodDetailFragment constructor() : Fragment() {
 
         btn_Order.setOnClickListener{
             if ((quantity.text.toString() == Constants.EMPTY_STRING) || quantity.text.toString().toInt() <= 0) {
-                Toast.makeText(getContext(), "Type correct number quantity!!!", Toast.LENGTH_LONG)
+                Toast.makeText(context, "Type correct number quantity!!!", Toast.LENGTH_LONG)
                     .show()
                 return@setOnClickListener
             }
 
             var isValidated: Boolean = true
-            if ((address.getText().toString() == Constants.EMPTY_STRING)) {
-                address.setError("You must type the address!!")
+            if ((address.text.toString() == Constants.EMPTY_STRING)) {
+                address.error = "You must type the address!!"
                 isValidated = false
             }
-            if ((quantity.getText().toString() == Constants.EMPTY_STRING)) {
-                quantity.setError("You must type the quantity!!")
+            if ((quantity.text.toString() == Constants.EMPTY_STRING)) {
+                quantity.error = "You must type the quantity!!"
                 isValidated = false
             }
 
@@ -164,7 +164,7 @@ class FoodDetailFragment constructor() : Fragment() {
             alert.setPositiveButton("Yes"){
                     _, _ ->
                 if (isValidated) {
-                    mViewModel!!.addtoCart(
+                    mViewModel.addtoCart(
                         mViewModel.food.value!!.id,
                         quantity.text.toString(),
                         price,
@@ -181,7 +181,7 @@ class FoodDetailFragment constructor() : Fragment() {
                     findNavController(requireView()).navigateUp()
                 } else {
                     Toast.makeText(
-                        getContext(),
+                        context,
                         "Add to cart failed!!! Please type all the require fields",
                         Toast.LENGTH_LONG
                     ).show()
@@ -197,7 +197,7 @@ class FoodDetailFragment constructor() : Fragment() {
         }
 
         quantity.addTextChangedListener(object : TextWatcher {
-            public override fun beforeTextChanged(
+            override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
                 count: Int,
@@ -216,7 +216,7 @@ class FoodDetailFragment constructor() : Fragment() {
                 ) {
                     quantity.error = "Please add a correct quantity! Max is 20."
                     Toast.makeText(
-                        getContext(),
+                        context,
                         "Please add a correct quantity! Max is 20.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -227,7 +227,7 @@ class FoodDetailFragment constructor() : Fragment() {
                 textViewTotalCost.text = "Total Cost: $total VND"
             }
 
-            public override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {}
         })
 
     }
@@ -267,12 +267,12 @@ class FoodDetailFragment constructor() : Fragment() {
 
 
         if ((quantity == Constants.EMPTY_STRING) || quantity.toInt() <= 0) {
-            Toast.makeText(getContext(), "Type correct number quantity!!!", Toast.LENGTH_LONG)
+            Toast.makeText(context, "Type correct number quantity!!!", Toast.LENGTH_LONG)
                 .show()
             return
         }
         if (isCartValidated) {
-            mViewModel!!.addtoCart(
+            mViewModel.addtoCart(
                 id,
                 quantity,0,
                 muser.phoneNumber,
@@ -282,11 +282,11 @@ class FoodDetailFragment constructor() : Fragment() {
                 muser.email,
                 ""
             )
-            Toast.makeText(getContext(), "Add to cart successfully!!!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Add to cart successfully!!!", Toast.LENGTH_LONG).show()
             findNavController(requireView()).navigateUp()
         } else {
             Toast.makeText(
-                getContext(),
+                context,
                 "Add to cart failed!!! Please type all the require fields",
                 Toast.LENGTH_LONG
             ).show()
@@ -302,8 +302,8 @@ class FoodDetailFragment constructor() : Fragment() {
     }
 
     private fun calculateTotalCost() {
-        binding!!.quantity.addTextChangedListener(object : TextWatcher {
-            public override fun beforeTextChanged(
+        binding.quantity.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
                 count: Int,
@@ -311,7 +311,7 @@ class FoodDetailFragment constructor() : Fragment() {
             ) {
             }
 
-            public override fun onTextChanged(
+            override fun onTextChanged(
                 s: CharSequence,
                 start: Int,
                 before: Int,
@@ -320,9 +320,9 @@ class FoodDetailFragment constructor() : Fragment() {
                 if ((Constants.EMPTY_STRING == s.toString()) || (s.toString()
                         .toInt() <= 0) || (s.toString().toInt() > 20)
                 ) {
-                    binding!!.quantity.setError("Please add a correct quantity! Max is 20.")
+                    binding.quantity.error = "Please add a correct quantity! Max is 20."
                     Toast.makeText(
-                        getContext(),
+                        context,
                         "Please add a correct quantity! Max is 20.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -330,10 +330,10 @@ class FoodDetailFragment constructor() : Fragment() {
                 }
                 val q: Int = s.toString().toInt()
                 val total: Int = foodCost * q * Sale / 100
-                binding!!.textViewTotalCost.setText("Total Cost: " + total + " VND")
+                binding.textViewTotalCost.text = "Total Cost: " + total + " VND"
             }
 
-            public override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
@@ -341,40 +341,40 @@ class FoodDetailFragment constructor() : Fragment() {
 
     private val isCartValidated: Boolean
         private get() {
-            val userAddress: EditText = binding!!.address
-            val quantity: EditText = binding!!.quantity
+            val userAddress: EditText = binding.address
+            val quantity: EditText = binding.quantity
             var isValidated: Boolean = true
-            if ((userAddress.getText().toString() == Constants.EMPTY_STRING)) {
-                userAddress.setError("You must type the address!!")
+            if ((userAddress.text.toString() == Constants.EMPTY_STRING)) {
+                userAddress.error = "You must type the address!!"
                 isValidated = false
             }
-            if ((quantity.getText().toString() == Constants.EMPTY_STRING)) {
-                quantity.setError("You must type the quantity!!")
+            if ((quantity.text.toString() == Constants.EMPTY_STRING)) {
+                quantity.error = "You must type the quantity!!"
                 isValidated = false
             }
             return isValidated
         }
 
     private fun loadUser() {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         val docRef: DocumentReference =
             FirebaseFirestore.getInstance().collection(Constants.FS_USER).document(
-                user!!.getUid()
+                user!!.uid
             )
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot?> {
-            public override fun onComplete(task: Task<DocumentSnapshot?>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot? = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot?>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot? = task.result
                     if (document!!.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        muser = User.Companion.getUserFromFireStore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        muser = User.getUserFromFireStore(document)
                         if ((muser.roles == Constants.ROLE_DELIVERER)) {
-                            binding!!.btnOrder.setVisibility(View.GONE)
-                            binding!!.quantity.setVisibility(View.GONE)
-                            binding!!.address.setVisibility(View.GONE)
-                            binding!!.btnAddressSet.setVisibility(View.GONE)
-                            binding!!.note.setVisibility(View.GONE)
-                            binding!!.textViewTotalCost.setVisibility(View.GONE)
+                            binding.btnOrder.visibility = View.GONE
+                            binding.quantity.visibility = View.GONE
+                            binding.address.visibility = View.GONE
+                            binding.btnAddressSet.visibility = View.GONE
+                            binding.note.visibility = View.GONE
+                            binding.textViewTotalCost.visibility = View.GONE
                         }
                     }
                 }

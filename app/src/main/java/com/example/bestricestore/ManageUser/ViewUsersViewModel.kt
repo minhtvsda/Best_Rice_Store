@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class ViewUsersViewModel constructor() : ViewModel() {
+class ViewUsersViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var userList: MutableLiveData<List<User>> = MutableLiveData()
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -38,15 +38,15 @@ class ViewUsersViewModel constructor() : ViewModel() {
                 .whereEqualTo("roles", Constants.ROLE_CUSTOMER)
                 .get() //lay tat ca ve
                 .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    public override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                            for (document: QueryDocumentSnapshot in task.getResult()) {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                            for (document: QueryDocumentSnapshot in task.result) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    document.getId() + " => " + document.getData()
+                                    document.id + " => " + document.data
                                 )
                                 val u: User =
-                                    User.Companion.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                    User.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
                                 uList.add(u)
                             }
                             userList.setValue(uList)
@@ -54,7 +54,7 @@ class ViewUsersViewModel constructor() : ViewModel() {
                             Log.w(
                                 Constants.FIRE_STORE,
                                 "Error getting documents.",
-                                task.getException()
+                                task.exception
                             )
                         }
                     }
@@ -63,15 +63,15 @@ class ViewUsersViewModel constructor() : ViewModel() {
                 .whereEqualTo("roles", Constants.ROLE_DELIVERER)
                 .get() //lay tat ca ve
                 .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                    public override fun onComplete(task: Task<QuerySnapshot>) {
-                        if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                            for (document: QueryDocumentSnapshot in task.getResult()) {
+                    override fun onComplete(task: Task<QuerySnapshot>) {
+                        if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                            for (document: QueryDocumentSnapshot in task.result) {
                                 Log.d(
                                     Constants.FIRE_STORE,
-                                    document.getId() + " => " + document.getData()
+                                    document.id + " => " + document.data
                                 )
                                 val u: User =
-                                    User.Companion.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                    User.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
                                 uList.add(u)
                             }
                             userList.setValue(uList)
@@ -79,7 +79,7 @@ class ViewUsersViewModel constructor() : ViewModel() {
                             Log.w(
                                 Constants.FIRE_STORE,
                                 "Error getting documents.",
-                                task.getException()
+                                task.exception
                             )
                         }
                     }
@@ -92,20 +92,20 @@ class ViewUsersViewModel constructor() : ViewModel() {
             .whereEqualTo("roles", roles)
             .get() //lay tat ca ve
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot> {
-                public override fun onComplete(task: Task<QuerySnapshot>) {
-                    if (task.isSuccessful()) { //colection la` 1 tap hop cac document
-                        for (document: QueryDocumentSnapshot in task.getResult()) {
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful) { //colection la` 1 tap hop cac document
+                        for (document: QueryDocumentSnapshot in task.result) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                document.getId() + " => " + document.getData()
+                                document.id + " => " + document.data
                             )
                             val u: User =
-                                User.Companion.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
+                                User.getUserIdFromFireStore(document) //bien moi 1 document tu firestore(K,V) thanh be
                             uList.add(u)
                         }
                         userList.setValue(uList)
                     } else {
-                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.getException())
+                        Log.w(Constants.FIRE_STORE, "Error getting documents.", task.exception)
                     }
                 }
             })

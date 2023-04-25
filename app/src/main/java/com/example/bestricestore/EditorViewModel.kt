@@ -14,14 +14,14 @@ import com.google.firebase.iid.FirebaseInstanceIdReceiver
 import java.util.*
 
 
-class EditorViewModel constructor() : ViewModel() {
+class EditorViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var food: MutableLiveData<FoodEntity> = MutableLiveData()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     fun getFoodById(id: String) {
         if (id === Constants.NEW_ID) {
-            food.setValue(FoodEntity())
+            food.value = FoodEntity()
             return
         }
         val docRef: DocumentReference =
@@ -32,14 +32,14 @@ class EditorViewModel constructor() : ViewModel() {
                 if (task.isSuccessful) {
                     val document: DocumentSnapshot = task.result!!
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
                         val f: FoodEntity = FoodEntity.getFoodFromFirestore(document)
                         food.setValue(f)
                     } else {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
 
@@ -51,17 +51,17 @@ class EditorViewModel constructor() : ViewModel() {
         if (updateFood.id === Constants.EMPTY_STRING) {
             //insert new
             db.collection(Constants.FS_FOOD_SET)
-                .add((bMap)!!)
+                .add((bMap))
                 .addOnSuccessListener(object : OnSuccessListener<DocumentReference?> {
-                    public override fun onSuccess(documentReference: DocumentReference?) {
+                    override fun onSuccess(documentReference: DocumentReference?) {
                         Log.d(
                             Constants.FIRE_STORE,
-                            "DocumentSnapshot written with ID: " + documentReference!!.getId()
+                            "DocumentSnapshot written with ID: " + documentReference!!.id
                         )
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         Log.w(Constants.FIRE_STORE, "Error adding document", e)
                     }
                 })
@@ -70,14 +70,14 @@ class EditorViewModel constructor() : ViewModel() {
             //update
             db.collection(Constants.FS_FOOD_SET)
                 .document(updateFood.id!!) //chon id ma ta muon sua
-                .set((bMap)!!) //sua noi dung thong qua bMap
+                .set((bMap)) //sua noi dung thong qua bMap
                 .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                    public override fun onSuccess(aVoid: Void?) {
+                    override fun onSuccess(aVoid: Void?) {
                         Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully written!")
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         Log.w(Constants.FIRE_STORE, "Error writing document", e)
                     }
                 })
@@ -88,12 +88,12 @@ class EditorViewModel constructor() : ViewModel() {
         db.collection(Constants.FS_FOOD_SET).document(food.value!!.id!!)
             .delete()
             .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                public override fun onSuccess(aVoid: Void?) {
+                override fun onSuccess(aVoid: Void?) {
                     Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully deleted!")
                 }
             })
             .addOnFailureListener(object : OnFailureListener {
-                public override fun onFailure(e: Exception) {
+                override fun onFailure(e: Exception) {
                     Log.w(Constants.FIRE_STORE, "Error deleting document", e)
                 }
             })

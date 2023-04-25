@@ -13,10 +13,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
-class UserEditorFeedbackViewModel constructor() : ViewModel() {
+class UserEditorFeedbackViewModel : ViewModel() {
     // TODO: Implement the ViewModel
     var feedback: MutableLiveData<Feedback> = MutableLiveData()
-    var user: FirebaseUser? = FirebaseAuth.getInstance().getCurrentUser()
+    var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     fun getFeedbackById(id: String?) {
         val docRef: DocumentReference = db.collection(Constants.FS_FEEDBACK).document(
@@ -24,18 +24,18 @@ class UserEditorFeedbackViewModel constructor() : ViewModel() {
         ) // lay document theo id
         docRef.get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
             //lay du lieu
-            public override fun onComplete(task: Task<DocumentSnapshot>) {
-                if (task.isSuccessful()) {
-                    val document: DocumentSnapshot = task.getResult()
+            override fun onComplete(task: Task<DocumentSnapshot>) {
+                if (task.isSuccessful) {
+                    val document: DocumentSnapshot = task.result
                     if (document.exists()) {
-                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.getData())
-                        val f: Feedback = Feedback.Companion.getFeedbackFromFirestore(document)
+                        Log.d(Constants.FIRE_STORE, "DocumentSnapshot data: " + document.data)
+                        val f: Feedback = Feedback.getFeedbackFromFirestore(document)
                         feedback.setValue(f)
                     } else {
                         Log.d(Constants.FIRE_STORE, "No such document")
                     }
                 } else {
-                    Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                    Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                 }
             }
         })

@@ -15,7 +15,7 @@ class Respond {
     var respondAnswer: String? = null
     var respondUrl: String? = null
 
-    constructor() {}
+    constructor()
     constructor(
         id: String?,
         feedbackUrl: String?,

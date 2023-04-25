@@ -47,7 +47,7 @@ class OrderListAdapter(
             }
             orderViewBinding.btnAccept.setOnClickListener { v: View? ->
                 listener.onItemOrderClick(
-                    cData!!.id,
+                    cData.id,
                     Constants.STATUS_DELIVERING
                 )
             }
@@ -60,7 +60,7 @@ class OrderListAdapter(
             orderViewBinding.imageView.setOnClickListener { v: View? -> listener.onImageClick(cData.imageUrl) }
             orderViewBinding.btnDeliveryDone.setOnClickListener { v: View? ->
                 listener.onItemOrderClick(
-                    cData!!.id,
+                    cData.id,
                     Constants.STATUS_DONE
                 )
             }

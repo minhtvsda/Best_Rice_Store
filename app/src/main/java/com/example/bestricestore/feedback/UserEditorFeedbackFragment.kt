@@ -18,53 +18,53 @@ import com.example.bestricestore.databinding.FragmentUserEditorFeedbackBinding
 import com.example.bestricestore.ImageDialogFragment
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.FirebaseFirestore
-class UserEditorFeedbackFragment constructor() : Fragment() {
+class UserEditorFeedbackFragment : Fragment() {
     private lateinit var mViewModel: UserEditorFeedbackViewModel
     private lateinit var binding: FragmentUserEditorFeedbackBinding
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(
             UserEditorFeedbackViewModel::class.java
         )
         binding = FragmentUserEditorFeedbackBinding.inflate(inflater, container, false)
-        mViewModel!!.feedback.observe(
+        mViewModel.feedback.observe(
             viewLifecycleOwner
         ) { feedback: Feedback ->
-            binding!!.date.setText("Date: " + feedback.date)
+            binding.date.text = "Date: " + feedback.date
             //                    binding.userName.setText("UserName: " + feedback.getUserName());
-            binding!!.title.setText("Title: " + feedback.title)
-            binding!!.purpose.setText("Purpose: " + feedback.purpose)
-            binding!!.userPhone.setText("UserPhone: " + feedback.userPhone)
-            binding!!.userName.setText("UserName: " + feedback.userName)
-            binding!!.status.setText("Status: " + feedback.feedbackStatus)
+            binding.title.text = "Title: " + feedback.title
+            binding.purpose.text = "Purpose: " + feedback.purpose
+            binding.userPhone.text = "UserPhone: " + feedback.userPhone
+            binding.userName.text = "UserName: " + feedback.userName
+            binding.status.text = "Status: " + feedback.feedbackStatus
             Glide.with(requireContext()).load(feedback.imageUrl)
                 .error(R.drawable.profile)
-                .fitCenter().into(binding!!.imageFeedback)
+                .fitCenter().into(binding.imageFeedback)
             if ((feedback.feedbackStatus == Constants.FEEDBACK_ALREADY_RESPONDED)) {
-                binding!!.btnNavigateRespond.visibility = View.VISIBLE
+                binding.btnNavigateRespond.visibility = View.VISIBLE
             }
-            binding!!.imageFeedback.setOnClickListener { v: View? ->
+            binding.imageFeedback.setOnClickListener { v: View? ->
                 showImage(
                     feedback.imageUrl
                 )
             }
         }
         val feedbackId: String? = requireArguments().getString("feedbackId")
-        mViewModel!!.getFeedbackById(feedbackId)
-        binding!!.btnDelete.setOnClickListener { v: View? ->
+        mViewModel.getFeedbackById(feedbackId)
+        binding.btnDelete.setOnClickListener { v: View? ->
             deleteFeedback(
                 feedbackId
             )
         }
-        binding!!.btnNavigateRespond.setOnClickListener { v: View? ->
+        binding.btnNavigateRespond.setOnClickListener { v: View? ->
             findNavController(
                 requireView()
             )
                 .navigate(R.id.checkRespondFragment, Bundle())
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun showImage(url: String?) {
@@ -82,7 +82,7 @@ class UserEditorFeedbackFragment constructor() : Fragment() {
         )
             .delete()
             .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                public override fun onSuccess(unused: Void?) {
+                override fun onSuccess(unused: Void?) {
                     Toast.makeText(context, "Delete successful!", Toast.LENGTH_SHORT).show()
                     findNavController(requireView()).navigateUp()
                 }

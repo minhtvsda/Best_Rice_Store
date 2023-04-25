@@ -22,16 +22,16 @@ class SignInFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mViewModel = ViewModelProvider(this).get(SignInViewModel::class.java)
         binding = FragmentSignInBinding.inflate(inflater, container, false)
-        binding!!.layoutSignup.setOnClickListener { v: View? ->
+        binding.layoutSignup.setOnClickListener { v: View? ->
             findNavController(
                 requireView()
             ).navigate(R.id.signUpFragment)
         }
-        binding!!.buttonSignin.setOnClickListener { v: View? -> SignIn() }
-        binding!!.btnForgotPassword.setOnClickListener { v: View? ->
+        binding.buttonSignin.setOnClickListener { v: View? -> SignIn() }
+        binding.btnForgotPassword.setOnClickListener { v: View? ->
             findNavController(
                 requireView()
             ).navigate(R.id.forgotPasswordFragment)
@@ -44,14 +44,14 @@ class SignInFragment : Fragment() {
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-        return binding!!.root
+        return binding.root
     }
 
     private fun SignIn() {
         val progressDialog = ProgressDialog(context)
         progressDialog.show()
-        val email = binding!!.email.text.toString().trim { it <= ' ' }
-        val password = binding!!.password.text.toString().trim { it <= ' ' }
+        val email = binding.email.text.toString().trim { it <= ' ' }
+        val password = binding.password.text.toString().trim { it <= ' ' }
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

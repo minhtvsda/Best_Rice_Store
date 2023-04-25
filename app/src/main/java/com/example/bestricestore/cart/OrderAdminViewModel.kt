@@ -28,7 +28,7 @@ class OrderAdminViewModel : ViewModel() {
                 if (task.isSuccessful) { //colection la` 1 tap hop cac document
                     for (document in task.result) {
                         Log.d(Constants.FIRE_STORE, document.id + " => " + document.data)
-                        val c: CartItem = CartItem.Companion.getCartFromFirestore(document)
+                        val c: CartItem = CartItem.getCartFromFirestore(document)
                         cList.add(c)
                     }
                     orderList.setValue(cList)

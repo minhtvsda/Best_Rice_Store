@@ -28,63 +28,63 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ViewUsersFragment constructor() : Fragment(), UserListAdapter.ListUserListener {
+class ViewUsersFragment : Fragment(), UserListAdapter.ListUserListener {
     private lateinit var mViewModel: ViewUsersViewModel
     private lateinit var binding: FragmentViewUsersBinding
     private var adapter: UserListAdapter? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         mViewModel = ViewModelProvider(this).get(ViewUsersViewModel::class.java)
         binding = FragmentViewUsersBinding.inflate(inflater, container, false)
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         //get activity, app chinh la ca activity chua fragment  nay
-        val ab: ActionBar? = app!!.getSupportActionBar() //lay phan giai mau tim
+        val ab: ActionBar? = app!!.supportActionBar //lay phan giai mau tim
         ab!!.setHomeButtonEnabled(true)
         ab.setDisplayShowHomeEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
         ab.setHomeAsUpIndicator(R.drawable.ic_baseline_home_24)
         ab.title = "Manage User"
         setHasOptionsMenu(true)
-        val rv = binding!!.recyclerView
+        val rv = binding.recyclerView
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
-                getContext(),
+                context,
                 (LinearLayoutManager(context).orientation)
             )
         )
-        mViewModel!!.userList.observe(
+        mViewModel.userList.observe(
             viewLifecycleOwner
         ) { userList: List<User> ->
             adapter = UserListAdapter(userList, this)
-            binding!!.recyclerView.setAdapter(adapter)
-            binding!!.recyclerView.setLayoutManager(LinearLayoutManager(getActivity()))
+            binding.recyclerView.adapter = adapter
+            binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         }
         binding.bottomNavigation.setOnNavigationItemSelectedListener {
             onNavigationItemSelected(it)
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_viewusers, menu)
         val menuItem: MenuItem = menu.findItem(R.id.action_search_users) // get our menu item.
         //Interface for direct access to a previously created menu item.
         val sv =
             MenuItemCompat.getActionView(menuItem) as androidx.appcompat.widget.SearchView // getting search view of our item.
-        sv.setMaxWidth(Int.MAX_VALUE)
+        sv.maxWidth = Int.MAX_VALUE
         // below line is to call set on query text listener method.
-        sv.setQueryHint("Search by phone number, username, address!")
+        sv.queryHint = "Search by phone number, username, address!"
         sv.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            public override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
-            public override fun onQueryTextChange(newText: String): Boolean {
+            override fun onQueryTextChange(newText: String): Boolean {
                 filter(newText)
                 return false
             }
@@ -93,7 +93,7 @@ class ViewUsersFragment constructor() : Fragment(), UserListAdapter.ListUserList
 
     fun filter(text: String) {
         val filterList: MutableList<User> = ArrayList()
-        for (user: User in mViewModel!!.userList.getValue()!!) {
+        for (user: User in mViewModel.userList.value!!) {
             if ((user.phoneNumber!!.uppercase(Locale.getDefault())
                     .contains(text.uppercase(Locale.getDefault()))
                         || user.username!!.uppercase(Locale.getDefault())
@@ -109,28 +109,28 @@ class ViewUsersFragment constructor() : Fragment(), UserListAdapter.ListUserList
         adapter!!.filterList(filterList)
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            R.id.action_search_customer -> mViewModel!!.getUserByRole(Constants.ROLE_CUSTOMER)
-            R.id.action_search_deliverer -> mViewModel!!.getUserByRole(Constants.ROLE_DELIVERER)
-            R.id.action_search_banned_users -> mViewModel!!.getUserByRole(Constants.FS_ROLE_BAN)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search_customer -> mViewModel.getUserByRole(Constants.ROLE_CUSTOMER)
+            R.id.action_search_deliverer -> mViewModel.getUserByRole(Constants.ROLE_DELIVERER)
+            R.id.action_search_banned_users -> mViewModel.getUserByRole(Constants.FS_ROLE_BAN)
             android.R.id.home -> findNavController(requireView()).navigate(R.id.mainFragment)
             else -> super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    public override fun onItemClick(userId: String?, i: Int) {
+    override fun onItemClick(userId: String?, i: Int) {
         if (i == 1) {
             val db: FirebaseFirestore = FirebaseFirestore.getInstance()
             db.collection(Constants.FS_USER).document((userId)!!)
                 .update("roles", Constants.FS_ROLE_BAN)
                 .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                    public override fun onSuccess(aVoid: Void?) {
+                    override fun onSuccess(aVoid: Void?) {
                         Log.d(Constants.FIRE_STORE, "DocumentSnapshot successfully updated!")
-                        mViewModel!!.users
+                        mViewModel.users
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "The user has been banned!!",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -151,9 +151,9 @@ class ViewUsersFragment constructor() : Fragment(), UserListAdapter.ListUserList
         }
         return true
     }
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
-        mViewModel!!.users
+        mViewModel.users
     }
 
 

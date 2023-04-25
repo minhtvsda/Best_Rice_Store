@@ -32,8 +32,8 @@ class CartFragment : Fragment(), CartListAdapter.ListCartListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+    ): View {
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         val ab: ActionBar? = app!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(false)
         setHasOptionsMenu(true)
@@ -106,19 +106,8 @@ class CartFragment : Fragment(), CartListAdapter.ListCartListener {
         return true
     }
 
-    fun filter(text: String) {
-        val filterList: MutableList<CartItem?> = ArrayList()
-        for (ci in mViewModel!!.cartList.value!!) {
-            if (ci.status!!.lowercase(Locale.getDefault())
-                    .contains(text.lowercase(Locale.getDefault()))
-            ) {
-                filterList.add(ci)
-            }
-        }
-        adapter!!.filterList(filterList)
-    }
     fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.Home -> Navigation.findNavController(requireView()).navigate(R.id.mainFragment)
             R.id.shoppingCart -> Toast.makeText(context, "You are still there", Toast.LENGTH_SHORT).show()
             R.id.News -> Navigation.findNavController(requireView()).navigate(R.id.newFragment)

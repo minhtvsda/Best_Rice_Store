@@ -19,18 +19,18 @@ import com.example.bestricestore.data.Respond
 import com.example.bestricestore.databinding.FragmentCheckRespondBinding
 import java.util.*
 
-class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListItemListener {
+class CheckRespondFragment : Fragment(), CheckRespondAdapter.ListItemListener {
     private var mViewModel: CheckRespondViewModel? = null
     private var binding: FragmentCheckRespondBinding? = null
     private var adapter: CheckRespondAdapter? = null
     var role: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val app = activity as AppCompatActivity?
         //get activity, app chinh la ca activity chua fragment  nay
-        val ab: ActionBar? = app!!.getSupportActionBar() //lay phan giai mau tim
+        val ab: ActionBar? = app!!.supportActionBar //lay phan giai mau tim
         ab!!.setHomeButtonEnabled(true)
         ab.setDisplayShowHomeEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
@@ -42,20 +42,20 @@ class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListI
         rv.setHasFixedSize(true)
         rv.addItemDecoration(
             DividerItemDecoration(
-                getContext(),
-                (LinearLayoutManager(getContext()).getOrientation())
+                context,
+                (LinearLayoutManager(context).orientation)
             )
         )
         mViewModel!!.respondList.observe(
             viewLifecycleOwner
         ) { responds: List<Respond?>? ->
             adapter = CheckRespondAdapter(responds, this)
-            rv.setAdapter(adapter)
-            rv.setLayoutManager(LinearLayoutManager(getContext()))
+            rv.adapter = adapter
+            rv.layoutManager = LinearLayoutManager(context)
         }
         role = requireArguments().getString("role", "")
         responds
-        return binding!!.getRoot()
+        return binding!!.root
     }
 
     private val responds: Unit
@@ -67,22 +67,22 @@ class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListI
             }
         }
 
-    public override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_check_responds, menu)
         val menuItem: MenuItem = menu.findItem(R.id.action_search_respond) // get our menu item.
         //Interface for direct access to a previously created menu item.
         val sv =
             MenuItemCompat.getActionView(menuItem) as android.widget.SearchView // getting search view of our item.
-        sv.setMaxWidth(Int.MAX_VALUE)
+        sv.maxWidth = Int.MAX_VALUE
         // below line is to call set on query text listener method.
         sv.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-            public override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
-            public override fun onQueryTextChange(newText: String): Boolean {
-                if (mViewModel!!.respondList.getValue() != null) {
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (mViewModel!!.respondList.value != null) {
                     filter(newText)
                 }
                 return false
@@ -90,8 +90,8 @@ class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListI
         })
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> findNavController(requireView()).navigate(R.id.mainFragment)
             else -> return super.onOptionsItemSelected(item)
         }
@@ -100,7 +100,7 @@ class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListI
 
     fun filter(text: String) {
         val filterList: MutableList<Respond?> = ArrayList()
-        for (fr: Respond? in mViewModel!!.respondList.getValue()!!) {
+        for (fr: Respond? in mViewModel!!.respondList.value!!) {
             if ((fr!!.title!!.uppercase(Locale.getDefault())
                     .contains(text.uppercase(Locale.getDefault()))
                         || fr.userPhone!!.uppercase(Locale.getDefault())
@@ -114,13 +114,13 @@ class CheckRespondFragment constructor() : Fragment(), CheckRespondAdapter.ListI
         adapter!!.filterList(filterList)
     }
 
-    public override fun onItemClick(id: String?) {
+    override fun onItemClick(id: String?) {
         val bundle: Bundle = Bundle()
         bundle.putString("respondId", id)
         findNavController(requireView()).navigate(R.id.editorRespondFragment, bundle)
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         responds
     }

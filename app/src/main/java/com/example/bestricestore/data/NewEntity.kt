@@ -9,7 +9,7 @@ class NewEntity {
     var imageUrl: String? = null
     var date: String? = null
 
-    constructor() {}
+    constructor()
     constructor(title: String?, newInfo: String?, imageUrl: String?) {
         id = Constants.EMPTY_STRING
         this.title = title

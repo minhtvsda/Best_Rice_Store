@@ -30,10 +30,10 @@ class NewListAdapter constructor(
         }
 
         fun bindData(nData: NewEntity?) {
-            newViewBinding.newTitle.setText("Title: " + nData!!.title)
-            newViewBinding.newInfo.setText("Main info: \n" + nData.newInfo)
-            newViewBinding.newDate.setText("Date: " + nData.date)
-            newViewBinding.getRoot()
+            newViewBinding.newTitle.text = "Title: " + nData!!.title
+            newViewBinding.newInfo.text = "Main info: \n" + nData.newInfo
+            newViewBinding.newDate.text = "Date: " + nData.date
+            newViewBinding.root
                 .setOnClickListener { v: View? -> listener.onItemClick(nData.id!!) }
             Glide.with((context)!!).load(nData.imageUrl)
                 .error(R.drawable.profile)
@@ -42,19 +42,19 @@ class NewListAdapter constructor(
         }
     }
 
-    public override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewViewHolder {
-        val view: View = LayoutInflater.from(parent.getContext())
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewViewHolder {
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_new, parent, false)
         //meaning get everything from app
         return NewViewHolder(view)
     }
 
-    public override fun onBindViewHolder(holder: NewViewHolder, position: Int) {
-        val nData: NewEntity? = newList!!.get(position)
+    override fun onBindViewHolder(holder: NewViewHolder, position: Int) {
+        val nData: NewEntity = newList.get(position)
         holder.bindData(nData)
     }
 
-    public override fun getItemCount(): Int {
-        return newList!!.size
+    override fun getItemCount(): Int {
+        return newList.size
     }
 }

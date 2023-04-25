@@ -31,15 +31,15 @@ import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditorNewFragment constructor() : Fragment() {
+class EditorNewFragment : Fragment() {
     private lateinit var mViewModel: EditorNewViewModel
     private lateinit var binding: FragmentEditorNewBinding
     private val REQUEST_CODE: Int = 200
     private var newUri: Uri? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 //        AppCompatActivity app = (AppCompatActivity)getActivity();
 //        //get activity, app chinh la ca activity chua fragment  nay
 //        ActionBar ab = app.getSupportActionBar(); //lay phan giai mau tim
@@ -50,35 +50,35 @@ class EditorNewFragment constructor() : Fragment() {
 //        setHasOptionsMenu(true);
         mViewModel = ViewModelProvider(this).get(EditorNewViewModel::class.java)
         binding = FragmentEditorNewBinding.inflate(inflater, container, false)
-        mViewModel!!.news.observe(
+        mViewModel.news.observe(
             viewLifecycleOwner
         ) { newEntity: NewEntity? ->
-            binding!!.edtTitle.setText(newEntity!!.title)
-            binding!!.edtNewInfo.setText(newEntity.newInfo)
-            binding!!.textDate.setText(newEntity.date)
+            binding.edtTitle.setText(newEntity!!.title)
+            binding.edtNewInfo.setText(newEntity.newInfo)
+            binding.textDate.text = newEntity.date
             if (newEntity.imageUrl != null) {
                 Glide.with(requireContext()).load(newEntity.imageUrl)
-                    .error(R.drawable.profile).into(binding!!.imageNew)
+                    .error(R.drawable.profile).into(binding.imageNew)
             }
             requireActivity().invalidateOptionsMenu()
         }
         val newId: String? = requireArguments().getString("newId")
         if (newId === Constants.NEW_ID) {
-            binding!!.deleteNew.setVisibility(View.GONE)
+            binding.deleteNew.visibility = View.GONE
         }
-        binding!!.imageNew.setOnClickListener { v: View? -> selectImage() }
-        mViewModel!!.getNewById(newId)
-        binding!!.saveNew.setOnClickListener { v: View? -> savethenReturn() }
-        binding!!.deleteNew.setOnClickListener { v: View? -> deletethenReturn() }
-        binding!!.textDate.setOnClickListener { v: View? ->
+        binding.imageNew.setOnClickListener { v: View? -> selectImage() }
+        mViewModel.getNewById(newId)
+        binding.saveNew.setOnClickListener { v: View? -> savethenReturn() }
+        binding.deleteNew.setOnClickListener { v: View? -> deletethenReturn() }
+        binding.textDate.setOnClickListener { v: View? ->
             val calendar: Calendar = Calendar.getInstance()
             val year: Int = calendar.get(Calendar.YEAR)
             val month: Int = calendar.get(Calendar.MONTH)
             val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
-            val etDate: TextView = binding!!.textDate
+            val etDate: TextView = binding.textDate
             val datePickerDialog: DatePickerDialog = DatePickerDialog(
                 requireContext(), object : OnDateSetListener {
-                    public override fun onDateSet(
+                    override fun onDateSet(
                         view: DatePicker,
                         year1: Int,
                         month1: Int,
@@ -87,53 +87,53 @@ class EditorNewFragment constructor() : Fragment() {
                         var month1: Int = month1
                         month1 += 1
                         val date: String = day1.toString() + "/" + month1 + "/" + year1
-                        etDate.setText(date)
-                        Toast.makeText(getContext(), "Select date successfully!", Toast.LENGTH_LONG)
+                        etDate.text = date
+                        Toast.makeText(context, "Select date successfully!", Toast.LENGTH_LONG)
                             .show()
                     }
                 }, year, month, day
             )
             datePickerDialog.show()
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun selectImage() {
         val intent: Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, REQUEST_CODE)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == REQUEST_CODE) && (data != null) && (data.getData() != null)) {
-            newUri = data.getData()
-            binding!!.imageNew.setImageURI(newUri)
+        if ((requestCode == REQUEST_CODE) && (data != null) && (data.data != null)) {
+            newUri = data.data
+            binding.imageNew.setImageURI(newUri)
         }
     }
 
     private fun savethenReturn() {
         var isValidated: Boolean = true
-        if ((binding!!.edtNewInfo.getText().toString() == Constants.EMPTY_STRING)) {
-            binding!!.edtNewInfo.setError("You need to type this field!")
+        if ((binding.edtNewInfo.text.toString() == Constants.EMPTY_STRING)) {
+            binding.edtNewInfo.error = "You need to type this field!"
             isValidated = false
         }
-        if ((binding!!.edtTitle.getText().toString() == Constants.EMPTY_STRING)) {
-            binding!!.edtTitle.setError("You need to type this field!")
+        if ((binding.edtTitle.text.toString() == Constants.EMPTY_STRING)) {
+            binding.edtTitle.error = "You need to type this field!"
             isValidated = false
         }
         if (!isValidated) {
             return
         }
-        val progressDialog: ProgressDialog = ProgressDialog(getContext())
+        val progressDialog: ProgressDialog = ProgressDialog(context)
         progressDialog.show()
-        val id: String? = mViewModel!!.news.getValue()?.id
+        val id: String? = mViewModel.news.value?.id
         //lay tu food do id ko doi
-        val title: String = binding!!.edtTitle.getText().toString()
-        val newInfo: String = binding!!.edtNewInfo.getText().toString()
-        val imageUrl: String? = mViewModel!!.news.getValue()?.imageUrl
-        val date: String = binding!!.textDate.getText().toString()
+        val title: String = binding.edtTitle.text.toString()
+        val newInfo: String = binding.edtNewInfo.text.toString()
+        val imageUrl: String? = mViewModel.news.value?.imageUrl
+        val date: String = binding.textDate.text.toString()
         if (newUri != null) {
             val formatter: SimpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
             val now: Date = Date()
@@ -143,12 +143,12 @@ class EditorNewFragment constructor() : Fragment() {
                 FirebaseStorage.getInstance().getReference("new/" + fileName)
             storageReference.putFile(newUri!!)
                 .addOnSuccessListener(object : OnSuccessListener<UploadTask.TaskSnapshot> {
-                    public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
+                    override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot) {
                         // lay url theo cach moi
                         val task: Task<Uri> = taskSnapshot.metadata!!
                             .reference!!.downloadUrl
                         task.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                            public override fun onSuccess(uri: Uri) {
+                            override fun onSuccess(uri: Uri) {
 //                                    String imageUrl2 = uri.toString();
 //                                    db.collection(Constants.FS_NEW_SET).document(id !=null ? id : "New" + (Constants.TIME - now.getTime()))
 //                                            .update("imageUrl", photoLink);
@@ -156,8 +156,8 @@ class EditorNewFragment constructor() : Fragment() {
                                     id //                != null ? id : Constants.NEW_FOOD_ID//neu id la null thi ta se lay const
                                     , title, newInfo, uri.toString(), date
                                 ) // sau nay co the dung add food
-                                mViewModel!!.updateNew(updateNew)
-                                Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT)
+                                mViewModel.updateNew(updateNew)
+                                Toast.makeText(context, "Successful", Toast.LENGTH_SHORT)
                                     .show()
                                 progressDialog.dismiss()
                                 findNavController(requireView()).navigate(R.id.newFragment)
@@ -166,10 +166,10 @@ class EditorNewFragment constructor() : Fragment() {
                     }
                 })
                 .addOnFailureListener(object : OnFailureListener {
-                    public override fun onFailure(e: Exception) {
+                    override fun onFailure(e: Exception) {
                         progressDialog.dismiss()
                         Toast.makeText(
-                            getContext(),
+                            context,
                             "Failed to upload Image!Try again.",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -180,16 +180,16 @@ class EditorNewFragment constructor() : Fragment() {
                 id //                != null ? id : Constants.NEW_FOOD_ID//neu id la null thi ta se lay const
                 , title, newInfo, imageUrl, date
             ) // sau nay co the dung add food
-            mViewModel!!.updateNew(updateNew)
-            Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show()
+            mViewModel.updateNew(updateNew)
+            Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show()
             progressDialog.dismiss()
             findNavController(requireView()).navigate(R.id.newFragment)
         }
     }
 
     private fun deletethenReturn() {
-        mViewModel!!.deleteNew()
-        Toast.makeText(getContext(), "Delete food successfully!!", Toast.LENGTH_SHORT).show()
+        mViewModel.deleteNew()
+        Toast.makeText(context, "Delete food successfully!!", Toast.LENGTH_SHORT).show()
         findNavController(requireView()).navigate(R.id.newFragment)
     }
 

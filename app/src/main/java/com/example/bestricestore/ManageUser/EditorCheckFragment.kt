@@ -29,17 +29,17 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EditorCheckFragment constructor() : Fragment() {
+class EditorCheckFragment : Fragment() {
     private lateinit var mViewModel: EditorCheckViewModel
     private lateinit var binding: FragmentEditorCheckBinding
     private var role: String? = null
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val app: AppCompatActivity? = getActivity() as AppCompatActivity?
+    ): View {
+        val app: AppCompatActivity? = activity as AppCompatActivity?
         //get activity, app chinh la ca activity chua fragment  nay
-        val ab: ActionBar? = app!!.getSupportActionBar() //lay phan giai mau tim
+        val ab: ActionBar? = app!!.supportActionBar //lay phan giai mau tim
         ab!!.setHomeButtonEnabled(true)
         ab.setDisplayShowHomeEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
@@ -47,37 +47,37 @@ class EditorCheckFragment constructor() : Fragment() {
         setHasOptionsMenu(true)
         mViewModel = ViewModelProvider(this).get(EditorCheckViewModel::class.java)
         binding = FragmentEditorCheckBinding.inflate(inflater, container, false)
-        mViewModel!!.muser.observe(
+        mViewModel.muser.observe(
             this.viewLifecycleOwner
         ) { user: User ->
             role = user.roles
-            binding!!.userPhoneNumber.setText("Phone: " + user.phoneNumber)
-            binding!!.userName.setText("Name: " + user.username)
-            binding!!.userEmail.setText("Email: " + user.email)
-            binding!!.userRoles.setText("Role: $role")
+            binding.userPhoneNumber.text = "Phone: " + user.phoneNumber
+            binding.userName.text = "Name: " + user.username
+            binding.userEmail.text = "Email: " + user.email
+            binding.userRoles.text = "Role: $role"
         }
         val userId: String? = requireArguments().getString("userId")
-        mViewModel!!.getUserById(userId)
+        mViewModel.getUserById(userId)
         getDeliLink(userId)
-        binding!!.btnAccept.setOnClickListener { v: View? ->
+        binding.btnAccept.setOnClickListener { v: View? ->
             role = Constants.ROLE_DELIVERER
-            binding!!.userRoles.setText("Role: " + role)
+            binding.userRoles.text = "Role: " + role
             Toast.makeText(
-                getContext(),
+                context,
                 "Change the roles to Deliverer! Click save to save your change!",
                 Toast.LENGTH_LONG
             ).show()
         }
-        binding!!.btnDecline.setOnClickListener { v: View? ->
+        binding.btnDecline.setOnClickListener { v: View? ->
             role = Constants.DELIVERER_REGISTER_DECLINED
-            binding!!.userRoles.setText("Role: " + role)
+            binding.userRoles.text = "Role: " + role
             Toast.makeText(
-                getContext(),
+                context,
                 "Change the roles to declined register! Click save to save your change!",
                 Toast.LENGTH_LONG
             ).show()
         }
-        return binding!!.getRoot()
+        return binding.root
     }
 
     private fun showImageDialog(url: String?) {
@@ -85,12 +85,12 @@ class EditorCheckFragment constructor() : Fragment() {
         val result: Bundle = Bundle()
         result.putString("bundleKeyImageUrl", url)
         // The child fragment needs to still set the result on its parent fragment manager
-        getChildFragmentManager().setFragmentResult("requestKey", result)
-        fragment.show(getChildFragmentManager(), "TAG1")
+        childFragmentManager.setFragmentResult("requestKey", result)
+        fragment.show(childFragmentManager, "TAG1")
     }
 
-    public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 savethenReturn()
                 return true
@@ -101,7 +101,7 @@ class EditorCheckFragment constructor() : Fragment() {
 
     private fun savethenReturn() {
         FirebaseFirestore.getInstance().collection(Constants.FS_USER).document(
-            mViewModel!!.muser.value!!.id!!
+            mViewModel.muser.value!!.id!!
         )
             .update("roles", role)
         findNavController(requireView()).navigate(R.id.checkRegisterFragment)
@@ -113,32 +113,32 @@ class EditorCheckFragment constructor() : Fragment() {
         )
             .get().addOnCompleteListener(object : OnCompleteListener<DocumentSnapshot> {
                 //lay du lieu
-                public override fun onComplete(task: Task<DocumentSnapshot>) {
-                    if (task.isSuccessful()) {
-                        val document: DocumentSnapshot = task.getResult()
+                override fun onComplete(task: Task<DocumentSnapshot>) {
+                    if (task.isSuccessful) {
+                        val document: DocumentSnapshot = task.result
                         if (document.exists()) {
                             Log.d(
                                 Constants.FIRE_STORE,
-                                "DocumentSnapshot data: " + document.getData()
+                                "DocumentSnapshot data: " + document.data
                             )
-                            val cl: DeliLink = DeliLink.Companion.getDeliLinkFromFireStore(document)
+                            val cl: DeliLink = DeliLink.getDeliLinkFromFireStore(document)
                             Glide.with(requireContext()).load(cl.idUrl)
-                                .error(R.drawable.profile).into(binding!!.imageId)
+                                .error(R.drawable.profile).into(binding.imageId)
                             Glide.with(requireContext()).load(cl.drivingUrl)
-                                .error(R.drawable.profile).into(binding!!.imageDrivingLicense)
+                                .error(R.drawable.profile).into(binding.imageDrivingLicense)
                             Glide.with(requireContext()).load(cl.motorUrl)
-                                .error(R.drawable.profile).into(binding!!.imageMotorLicense)
-                            binding!!.imageId.setOnClickListener { v: View? ->
+                                .error(R.drawable.profile).into(binding.imageMotorLicense)
+                            binding.imageId.setOnClickListener { v: View? ->
                                 showImageDialog(
                                     cl.idUrl
                                 )
                             }
-                            binding!!.imageDrivingLicense.setOnClickListener { v: View? ->
+                            binding.imageDrivingLicense.setOnClickListener { v: View? ->
                                 showImageDialog(
                                     cl.drivingUrl
                                 )
                             }
-                            binding!!.imageMotorLicense.setOnClickListener { v: View? ->
+                            binding.imageMotorLicense.setOnClickListener { v: View? ->
                                 showImageDialog(
                                     cl.motorUrl
                                 )
@@ -147,7 +147,7 @@ class EditorCheckFragment constructor() : Fragment() {
                             Log.d(Constants.FIRE_STORE, "No such document")
                         }
                     } else {
-                        Log.d(Constants.FIRE_STORE, "get failed with ", task.getException())
+                        Log.d(Constants.FIRE_STORE, "get failed with ", task.exception)
                     }
                 }
             })

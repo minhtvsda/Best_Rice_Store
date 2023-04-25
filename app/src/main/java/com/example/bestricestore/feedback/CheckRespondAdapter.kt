@@ -25,12 +25,12 @@ class CheckRespondAdapter constructor(
         }
 
         fun bindData(rData: Respond?) {
-            respondViewBinding.date.setText("Date: " + rData?.date)
-            respondViewBinding.title.setText("Title:" + rData?.title)
-            respondViewBinding.userPhone.setText("UserPhone: " + rData?.userPhone)
-            respondViewBinding.purpose.setText("Purpose: " + rData?.purpose)
-            respondViewBinding.getRoot()
-                .setOnClickListener(View.OnClickListener({ v: View? -> listener.onItemClick(rData?.id) }))
+            respondViewBinding.date.text = "Date: " + rData?.date
+            respondViewBinding.title.text = "Title:" + rData?.title
+            respondViewBinding.userPhone.text = "UserPhone: " + rData?.userPhone
+            respondViewBinding.purpose.text = "Purpose: " + rData?.purpose
+            respondViewBinding.root
+                .setOnClickListener({ v: View? -> listener.onItemClick(rData?.id) })
         }
     }
 
@@ -39,18 +39,18 @@ class CheckRespondAdapter constructor(
         notifyDataSetChanged()
     }
 
-    public override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RespondViewHolder {
-        val view: View = LayoutInflater.from(parent.getContext())
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RespondViewHolder {
+        val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_respond, parent, false)
         return RespondViewHolder(view)
     }
 
-    public override fun onBindViewHolder(holder: RespondViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RespondViewHolder, position: Int) {
         val respond: Respond? = respondList!!.get(position)
         holder.bindData(respond)
     }
 
-    public override fun getItemCount(): Int {
+    override fun getItemCount(): Int {
         return respondList!!.size
     }
 }
