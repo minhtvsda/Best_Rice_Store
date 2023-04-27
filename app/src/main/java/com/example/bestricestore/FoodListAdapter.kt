@@ -22,6 +22,7 @@ class FoodListAdapter constructor(
     inner class FoodViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val foodViewBinding: ListFoodBinding
 
+
         init {
             foodViewBinding =
                 ListFoodBinding.bind(itemView) //initiate binding. pass the view to binding
